@@ -9,9 +9,9 @@ from crypto.verify import verify_data
 from config import HTTP_TIMEOUT
 
 # your keys here
-ORIGINATOR_API_KEY
-BENEFICIARY_API_KEY
-DOMAIN
+ORIGINATOR_API_KEY = "1bb95eb6677172ffd7a84fa03a73cf908ecd4767068e8a4b76b70045517db159"
+BENEFICIARY_API_KEY = "a2b6e41524e8063af34160762935299291b31b86170c3ed8ceb2d4eefe3979cb"
+DOMAIN = "dev-api.sygna.io/sb"
 
 
 class ApiTest(unittest.TestCase):
