@@ -1,6 +1,7 @@
 import unittest
 from jsonobject import *
-from crypto.sign import signObj, verifyObj
+from crypto.sign import sign_message
+from crypto.verify import verify_message
 
 
 class Sign_data(JsonObject):
@@ -30,8 +31,8 @@ class SignTestCase(unittest.TestCase):
         )
 
         sign_data_obj = sign_data.to_json()
-        sig = signObj(sign_data_obj, self.PRIVATE_KEY)
-        is_valid = verifyObj(sign_data_obj, sig, self.PUBLIC_KEY)
+        sig = sign_message(sign_data_obj, self.PRIVATE_KEY)
+        is_valid = verify_message(sign_data_obj, sig, self.PUBLIC_KEY)
         self.assertEqual(is_valid, True)
 
 

@@ -36,7 +36,8 @@ def check_data_signed(data: dict) -> None:
         raise ValueError('Expect signature length to be 128.')
 
 
-def check_sign_permission_request_parameters(private_info: str, transaction: dict, data_dt: str, private_key: str) -> None:
+def check_sign_permission_request_parameters(private_info: str, transaction: dict, data_dt: str,
+                                             private_key: str) -> None:
     """check parameters of sign_permission_request is valid"""
     check_type(private_key, str, 'private_key')
     check_type(private_info, str, 'private_info')
@@ -57,7 +58,8 @@ def check_sign_callback_parameters(callback_url: str, private_key: str) -> None:
     check_type(callback_url, str, 'callback_url')
 
 
-def check_sign_permission_parameters(transfer_id: str, permission_status: Union[PermissionStatus, str], private_key: str) -> None:
+def check_sign_permission_parameters(transfer_id: str, permission_status: Union[PermissionStatus, str],
+                                     private_key: str) -> None:
     """check parameters of sign_permission is valid"""
     check_type(private_key, str, 'private_key')
     check_type(transfer_id, str, 'transfer_id')

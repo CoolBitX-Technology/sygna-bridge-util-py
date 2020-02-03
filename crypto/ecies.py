@@ -4,11 +4,12 @@ from Crypto.Cipher import AES
 import hmac
 import json
 
+
 def ecies_encrypt(message: str, public_key: str) -> str:
     """Sygna Bridge ECIES Encrypt.
         Args:
            message (str): message text to encode(in utf-8 plain text)
-           public_key (str): publicKey recipient's compressed publickey in hex form
+           public_key (str): publicKey recipient's compressed public key in hex form
         Returns:
            str. hex string of encrypt private message
         """
@@ -18,14 +19,14 @@ def ecies_encrypt(message: str, public_key: str) -> str:
     return enc.hex()
 
 
-def ecies_decrypt(enc_message: str, private_key: str) -> str:
+def ecies_decrypt(enc_message: str, private_key: str) -> bytes:
     """Sygna Bridge ECIES Decode.
      Args:
-        encode_message (str): encode_message whole hex string encrypted by Sygna ECIES
+        enc_message (str): encode_message whole hex string encrypted by Sygna ECIES
         private_key (str)
 
      Returns:
-        str.
+        bytes.
      """
     enc_message_b = bytes.fromhex(enc_message)
 

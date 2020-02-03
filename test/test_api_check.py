@@ -375,7 +375,7 @@ def test_check_sign_permission_parameters():
             'transfer_id', 'ACCEPT', 'private_key')
         check_sign_permission_parameters(
             'transfer_id', 'REJECT', 'private_key')
-    except (TypeError):
+    except TypeError:
         pytest.fail("Unexpected TypeError")
 
 
@@ -402,5 +402,15 @@ def test_check_sign_tx_id_parameters():
     try:
         check_sign_tx_id_parameters(
             'transfer_id', 'txid', 'private_key')
-    except (TypeError):
+    except TypeError:
         pytest.fail("Unexpected TypeError")
+
+
+if __name__ == '__main__':
+    test_check_type()
+    test_check_specific_key()
+    test_check_data_signed()
+    test_check_sign_permission_request_parameters()
+    test_check_sign_callback_parameters()
+    test_check_sign_permission_parameters()
+    test_check_sign_tx_id_parameters()

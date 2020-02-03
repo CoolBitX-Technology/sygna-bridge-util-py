@@ -1,10 +1,5 @@
-from config import SYGNA_BRIDGE_CENTRAL_PUBKEY
 from . import ecies, sign as sygna_sign
-# from api import check
 from api import (
-    check_type,
-    check_specific_key,
-    check_data_signed,
     check_sign_callback_parameters,
     check_sign_permission_parameters,
     check_sign_permission_request_parameters,
@@ -19,18 +14,18 @@ def sygna_encode_private_data(data: dict, public_key: str) -> str:
     """ Encrypt private info data to hex string.
     Args:
         data (dict): private info in data format
-        public_key (str): recipeint public key in hex string
+        public_key (str): recipient public key in hex string
 
     Returns:
         str. ECIES encoded private message.
     """
     data_str = json.dumps(data)
-    return ecies.ecies_encode(data_str, public_key)
+    return ecies.ecies_encrypt(data_str, public_key)
 
 
 def sygna_decode_private_data(private_message: str, private_key: str) -> dict:
-    """ Decode private info from recipent server."""
-    decode_str = ecies.ecies_decode(private_message, private_key)
+    """ Decode private info from recipient server."""
+    decode_str = ecies.ecies_decrypt(private_message, private_key)
     return json.loads(decode_str)
 
 
@@ -44,7 +39,7 @@ def sign_data(data: dict, private_key: str) -> dict:
         dict. original object adding a signature field
     """
     data_str = json.dumps(data)
-    signature = sygna_sign.sign(data_str, private_key)
+    signature = sygna_sign.sign_message(data_str, private_key)
     data['signature'] = signature.encode("hex")
     return data
 
