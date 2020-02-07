@@ -71,6 +71,7 @@ class SignTestCase(unittest.TestCase):
             'signature': ''
         }
         sig = signMsg(signVasp, self.PRIVATE_KEY)
+        """ sig from javascript util  """
         self.assertEqual(sig,
                          '2f1fc5a3ad0bf9e2541627dc91133ec6f82bbe9e7dfa03323623e6ed1ea981634d868001848c0773c5900eb923ca6742d6b4542a82645fa021c8576447af3547')
 
