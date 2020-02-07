@@ -11,8 +11,8 @@ def signMsg(message: dict, private_key: str) -> str:
     To remove all whitespace, like JSON.stringify,we need to specify the separators."""
 
     message_str = json.dumps(message, separators=(',', ':'))
-    message_b = message_str.encode('utf-8')
-    print('message_b:'+message_b)
+    message_b = message_str.encode(encoding='utf-8')
+    print(f'message_str = {message_str}')
     private_key_b_obj = bytearray.fromhex(private_key)
     sk = SigningKey.from_string(string=private_key_b_obj, curve=SECP256k1)
     sig = sk.sign_deterministic(data=message_b, hashfunc=sha256)
