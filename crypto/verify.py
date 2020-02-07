@@ -6,6 +6,7 @@ from typing import Union
 from config import SYGNA_BRIDGE_CENTRAL_PUBKEY
 from hashlib import sha256
 
+
 def verify_data(data: dict, public_key: str = SYGNA_BRIDGE_CENTRAL_PUBKEY) -> bool:
     """ verify data with provided public key or default sygna bridge public key
 
@@ -27,24 +28,16 @@ def verify_data(data: dict, public_key: str = SYGNA_BRIDGE_CENTRAL_PUBKEY) -> bo
 
 def verify_message(message: Union[dict, str], signature: str, public_key: str) -> bool:
     """ verify message(utf-8) with signature and public key"""
-    print(f'verify_message message = {message}')
-    print(f'verify_message signature = {signature}')
-    print(f'verify_message public_key = {public_key}')
-    message_str = json.dumps(message)
-    print(f'verify_message message_str = {message_str}')
-    print(f'verity_message type = {type(message_str)}')
+
+    if isinstance(message, dict):
+        message_str = json.dumps(message, separators=(',', ':'))
+    if isinstance(message, str):
+        message_str = message
+
     message_b = message_str.encode('utf-8')
-    print(f'verity_message message_b = {message_b}')
-    print(f'verity_message message_b type = {type(message_b)}')
     public_key_b_obj = bytearray.fromhex(public_key)
-    print(f'verity_message public_key_b_obj = {public_key_b_obj}')
-    print(f'verity_message public_key_b_obj type = {type(public_key_b_obj)}')
     signature_b_obj = bytearray.fromhex(signature)
-    print(f'verity_message signature_b_obj = {signature_b_obj}')
-    print(f'verity_message signature_b_obj type = {type(signature_b_obj)}')
+    vk = VerifyingKey.from_string(string=public_key_b_obj, curve=SECP256k1)
+    is_valid = vk.verify(signature=signature_b_obj, data=message_b, hashfunc=sha256)
 
-    vk = VerifyingKey.from_string(public_key_b_obj, curve=SECP256k1, hashfunc=sha256)
-    print(f'verity_message vk = {str(vk)}')
-
-    is_valid = vk.verify(signature_b_obj, message_b, hashfunc=sha256)
     return is_valid

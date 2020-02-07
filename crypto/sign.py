@@ -1,17 +1,18 @@
-from ecdsa.keys import SigningKey
-from ecdsa.curves import SECP256k1
-from hashlib import sha256
+from ecdsa import SigningKey, SECP256k1, util
 import json
-import ecdsa
+from hashlib import sha256
 
 def sign_message(message: dict, private_key: str) -> str:
     """sign utf-8 message with private message"""
-    message_str = json.dumps(message)
-    print(type(message_str))
-    print(message_str)
-    message_b = message_str.encode('utf-8')
+
+    """The result of json.dump is different from JSON.stringify in js, 
+    because json.dumps applies some minor pretty-printing by default but JSON.stringify does not. 
+    To remove all whitespace, like JSON.stringify,we need to specify the separators."""
+
+    message_str = json.dumps(message, separators=(',', ':'))
+    message_b = message_str.encode(encoding='utf-8')
+    print(f'message_str = {message_str}')
     private_key_b_obj = bytearray.fromhex(private_key)
-    sk = SigningKey.from_string(private_key_b_obj, SECP256k1, hashfunc=sha256)
-    sig = sk.sign(message_b, entropy=None, sigencode=ecdsa.util.sigencode_string_canonize,hashfunc=sha256)
-     #
+    sk = SigningKey.from_string(string=private_key_b_obj, curve=SECP256k1)
+    sig = sk.sign_deterministic(data=message_b, hashfunc=sha256, sigencode=util.sigencode_string_canonize)
     return sig.hex()
