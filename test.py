@@ -49,7 +49,7 @@ if __name__ == '__main__':
     priv='87c6578c29c9d864ca795d2a095beee1aabef1d6b284df7ec1b5e624045ae3db'
 
     sk = ecdsa.SigningKey.from_string(bytearray.fromhex(priv), curve=ecdsa.SECP256k1)
-    sk_result = sk.sign_deterministic(message_str_b, hashfunc=sha256)
+    sk_result = sk.sign_deterministic(message_str_b, hashfunc=sha256, sigencode=ecdsa.util.sigencode_string_canonize)
     print(sk_result.hex())
     vk = ecdsa.VerifyingKey.from_string(bytearray.fromhex(public_key), curve=ecdsa.SECP256k1)
     vk_result = vk.verify(bytearray.fromhex(sig), message_str_b, hashfunc=sha256)
