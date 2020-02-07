@@ -1,6 +1,7 @@
 import unittest
 from jsonobject import *
-from crypto.sign import signObj, verifyObj
+from crypto.sign import signMsg, verifyMsg
+import json
 
 
 class Sign_data(JsonObject):
@@ -16,8 +17,8 @@ class SignTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.PUBLIC_KEY = "048709ef46f46c7e89b58987b606dc54eda62f88424517667305d91b3e86b8847f1b44a9659831880a15885ec43a722f76c356ec0ee373a273a0a7900dcd077339"
-        cls.PRIVATE_KEY = "948798a4dd6864f18d5c40483aa05bb58ab211a1f9bc455c4065418ee001366a"
+        cls.PUBLIC_KEY = "04629dac91cbe671b38b20822f03fe39252a0f93505111c330fbf531af91f3a05e439ec27c4e8ad0b705408bbe9f1e225beeb2b1a33b1b7a23a20040a8c95fca61"
+        cls.PRIVATE_KEY = "87c6578c29c9d864ca795d2a095beee1aabef1d6b284df7ec1b5e624045ae3db"
 
     def testSign(self):
         sign_data = Sign_data(
@@ -29,9 +30,21 @@ class SignTestCase(unittest.TestCase):
             callbackUrl="http://ec2-3-19-59-48.us-east-2.compute.amazonaws.com:4000/api/v1/originator/transaction/permission"
         )
 
+
         sign_data_obj = sign_data.to_json()
-        sig = signObj(sign_data_obj, self.PRIVATE_KEY)
-        is_valid = verifyObj(sign_data_obj, sig, self.PUBLIC_KEY)
+        sig = signMsg(sign_data_obj, self.PRIVATE_KEY)
+        is_valid = verifyMsg(sign_data_obj, sig, self.PUBLIC_KEY)
+        self.assertEqual(is_valid, True)
+
+
+    def testSignVasp(self):
+       signVasp = ""
+
+        sig = signMsg(signVasp, self.PRIVATE_KEY)
+        self.assertEqual(sig,
+                         '2f1fc5a3ad0bf9e2541627dc91133ec6f82bbe9e7dfa03323623e6ed1ea981634d868001848c0773c5900eb923ca6742d6b4542a82645fa021c8576447af3547')
+
+        is_valid = verifyMsg(signVasp, sig, self.PUBLIC_KEY)
         self.assertEqual(is_valid, True)
 
 
