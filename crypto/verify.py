@@ -4,7 +4,7 @@ from ecdsa.keys import VerifyingKey
 from ecdsa.curves import SECP256k1
 from typing import Union
 from config import SYGNA_BRIDGE_CENTRAL_PUBKEY
-
+from hashlib import sha256
 
 def verify_data(data: dict, public_key: str = SYGNA_BRIDGE_CENTRAL_PUBKEY) -> bool:
     """ verify data with provided public key or default sygna bridge public key
@@ -43,8 +43,8 @@ def verify_message(message: Union[dict, str], signature: str, public_key: str) -
     print(f'verity_message signature_b_obj = {signature_b_obj}')
     print(f'verity_message signature_b_obj type = {type(signature_b_obj)}')
 
-    vk = VerifyingKey.from_string(public_key_b_obj, curve=SECP256k1)
-    print(f'verity_message vk = {vk}')
+    vk = VerifyingKey.from_string(public_key_b_obj, curve=SECP256k1, hashfunc=sha256)
+    print(f'verity_message vk = {str(vk)}')
 
-    is_valid = vk.verify(signature_b_obj, message_b)
+    is_valid = vk.verify(signature_b_obj, message_b, hashfunc=sha256)
     return is_valid

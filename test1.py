@@ -1,5 +1,6 @@
 import ecdsa
 import json
+from hashlib import sha256, sha1
 
 if __name__ == '__main__':
     # message = 'message'
@@ -50,15 +51,16 @@ if __name__ == '__main__':
     message_str_b = message_str.encode(encoding='utf-8')
 
     # SECP256k1 is the Bitcoin elliptic curve
-    # sk = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)
-    # vk = sk.get_verifying_key()
-    # print('vk', vk.to_string().hex())
-    # sig = sk.sign(message_str_b)
-    # print('sig', sig.hex())
-    # vk.verify(sig, message_str_b)
+    sk = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1, hashfunc=sha256)
+    sig = sk.sign_deterministic(message_str_b)
+    print('sig', sig.hex())
+    vk = sk.get_verifying_key()
+    public_key = vk.to_string().hex()
+    print('vk', public_key)
+    isValid = vk.verify(sig, message_str_b, hashfunc=sha1)
+    print(isValid)
+    # sig = 'eecf11ab95cfb03237cf8e27d1c654df19b367b1b120a8a167aadf417500c64cbe600e9f17f3b80834ea24bb48196b6a09b7b786b17237d6ee57be32d3832b21'
+    # public_key = '44049f6dbcf630c3184c7fba083dda0870a363f8e80ab4c5c639f72f7be3d5a90138fcaa54ec038ede6a7e67780cd382f938478ff2129e5be13270fd12ba8e7e'
 
-    sig = 'eecf11ab95cfb03237cf8e27d1c654df19b367b1b120a8a167aadf417500c64cbe600e9f17f3b80834ea24bb48196b6a09b7b786b17237d6ee57be32d3832b21'
-    public_key = '44049f6dbcf630c3184c7fba083dda0870a363f8e80ab4c5c639f72f7be3d5a90138fcaa54ec038ede6a7e67780cd382f938478ff2129e5be13270fd12ba8e7e'
-
-    vk = ecdsa.VerifyingKey.from_string(bytearray.fromhex(public_key), curve=ecdsa.SECP256k1)
-    print(vk.verify(bytearray.fromhex(sig), message_str_b)) # True
+    # vk = ecdsa.VerifyingKey.from_string(bytearray.fromhex(public_key), curve=ecdsa.SECP256k1, hashfunc=sha256)
+    # print(vk.verify(sig, message_str_b)) # True
