@@ -1,6 +1,6 @@
 import unittest
 import json
-from crypto.ecies import ecies_encrypt, ecies_decrypt
+from crypto.ecies import ecies_encrypt, ecies_decrypt,ecies_encrypt_II
 
 
 class CryptoTest(unittest.TestCase):
@@ -22,7 +22,9 @@ class CryptoTest(unittest.TestCase):
                         "    }" \
                         "}"
         sensitiveStr = json.dumps(sensitiveData)
-        enc = ecies_encrypt(sensitiveData, self.PUBLIC_KEY)
+        # enc = ecies_encrypt(sensitiveData, self.PUBLIC_KEY)
+        enc = ecies_encrypt_II(sensitiveData, self.PUBLIC_KEY)
+
         print(enc)
         dec = ecies_decrypt(enc, self.PRIVATE_KEY)
         my_json = dec.decode('utf8')
