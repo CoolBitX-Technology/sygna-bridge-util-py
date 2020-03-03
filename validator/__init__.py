@@ -14,7 +14,7 @@ from .validatedata import (
     validate_expire_date
 )
 
-__ALL__ = [
+__all__ = [
     'validate_schema',
     'validate_permission_schema',
     'validate_permission_request_schema',

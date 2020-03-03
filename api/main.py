@@ -1,8 +1,13 @@
 import requests
 from config import SYGNA_BRIDGE_CENTRAL_PUBKEY, HTTP_TIMEOUT
-from . import check
 import crypto.verify
 import json
+from validator import (
+    validate_transfer_id,
+    validate_post_permission_schema,
+    validate_post_permission_request_schema,
+    validate_post_txid_schema
+)
 
 
 class API:
@@ -55,11 +60,10 @@ class API:
             Exception('Request VASPs failed')
             Exception('get VASP info error: invalid signature')
          """
-        url = self.domain+'api/v1/bridge/vasp'
+        url = self.domain + 'api/v1/bridge/vasp'
         result = self.get_sb(url)
-
         if 'vasp_data' not in result:
-            raise Exception(
+            raise ValueError(
                 'Request VASPs failed: {0}'.format(result['message']))
 
         if not validate:
@@ -68,7 +72,7 @@ class API:
         valid = crypto.verify.verify_data(
             result, SYGNA_BRIDGE_CENTRAL_PUBKEY)
         if not valid:
-            raise Exception('get VASP info error: invalid signature.')
+            raise ValueError('get VASP info error: invalid signature.')
 
         return result['vasp_data']
 
@@ -93,7 +97,7 @@ class API:
                 break
 
         if target_vasp is None:
-            raise Exception('Invalid vasp_code')
+            raise ValueError('Invalid vasp_code')
 
         return target_vasp['vasp_pubkey']
 
@@ -121,15 +125,23 @@ class API:
                 }
             ), vasp_code:str, signature:str })
          """
-        url = self.domain+'api/v1/bridge/transaction/status?transfer_id='+transfer_id
+        validate_transfer_id(transfer_id)
+        url = self.domain + 'api/v1/bridge/transaction/status?transfer_id=' + transfer_id
         return self.get_sb(url)
 
-    def post_permission(self, permission_data: dict) -> dict:
+    def post_permission(self, post_permission_data: dict) -> dict:
         """Notify Sygna Bridge that you have confirmed specific permission Request from other VASP.
         Should be called by Beneficiary Server
 
          Args:
-            permission_data (dict): {transfer_id:str, permission_status:str, signature:str}
+            post_permission_data (dict): {
+                transfer_id:str,
+                permission_status:str,
+                signature:str,
+                Optional expire_date(int)
+                Optional reject_code(str) : BVRC001,BVRC002,BVRC003,BVRC004 or BVRC999
+                Optional reject_message(str)
+            }
 
          Returns:
             dict.
@@ -137,15 +149,27 @@ class API:
          Raises:
             Exception('permission_data invalid error')
          """
-        check.check_data_signed(permission_data)
+        validate_post_permission_schema(post_permission_data)
         url = self.domain + 'api/v1/bridge/transaction/permission'
-        return self.post_sb(url, permission_data)
+        return self.post_sb(url, post_permission_data)
 
-    def post_permission_request(self, request_data: dict, callback: dict) -> dict:
+    def post_permission_request(self, data: dict) -> dict:
         """Should be called by Originator.
 
-         Args: request_data ({private_info:str, transaction:dict, data_dat:str, signature:str}):Private sender info
-         encoded by crypto.sygnaEncodePrivateObj callback ({callback_url: string, signature:string})
+         Args: data : dict{
+            data(dict): Private sender info encoded by crypto.sygnaEncodePrivateObj{
+                private_info: str,
+                transaction: dict,
+                data_dat: str,
+                signature: str,
+                Optional expire_date: int
+            },
+            callback(dict): {
+                callback_url: str,
+                signature:str
+            }
+          }
+
 
          Returns:
             {transfer_id: str}
@@ -153,17 +177,16 @@ class API:
          Raises:
             Exception('request_data/callback invalid error')
          """
-        check.check_data_signed(request_data)
-        check.check_data_signed(callback)
+        validate_post_permission_request_schema(data)
         url = self.domain + 'api/v1/bridge/transaction/permission-request'
-        params = {'data': request_data, 'callback': callback}
+        params = {'data': data['data'], 'callback': data['callback']}
         return self.post_sb(url, params)
 
-    def post_transaction_id(self, send_tx_id_dict: dict) -> dict:
+    def post_transaction_id(self, data: dict) -> dict:
         """Send broadcasted transaction id to Sygna Bridge for purpose of storage.
 
          Args:
-            send_tx_id_dict ({transfer_id: str, txid:str, signature:str})
+            data ({transfer_id: str, txid:str, signature:str})
 
          Returns:
             dict
@@ -171,9 +194,6 @@ class API:
          Raises:
             Exception('send_tx_id_dict invalid error')
          """
-        check.check_data_signed(send_tx_id_dict)
-        check.check_specific_key(send_tx_id_dict, 'transfer_id', str)
-        check.check_specific_key(send_tx_id_dict, 'txid', str)
-
+        validate_post_txid_schema(data)
         url = self.domain + 'api/v1/bridge/transaction/txid'
-        return self.post_sb(url, send_tx_id_dict)
+        return self.post_sb(url, data)

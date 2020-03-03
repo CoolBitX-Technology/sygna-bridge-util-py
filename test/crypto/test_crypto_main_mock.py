@@ -4,8 +4,8 @@ import pytest
 import json
 import copy
 from crypto import (
-    sygna_encode_private_data,
-    sygna_decode_private_data,
+    sygna_encrypt_private_data,
+    sygna_decrypt_private_data,
     sign_data,
     sign_permission_request,
     sign_callback,
@@ -17,23 +17,23 @@ from crypto import main
 
 class CryptoTest(unittest.TestCase):
     @patch('crypto.ecies.ecies_encrypt')
-    def test_sygna_encode_private_data(self, mock_ecies_encrypt):
+    def test_sygna_encrypt_private_data(self, mock_ecies_encrypt):
         fake_data = {'key': 'value'}
         fake_public_key = 'd4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35'
         fake_result = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'
         mock_ecies_encrypt.return_value = fake_result
-        result = sygna_encode_private_data(fake_data, fake_public_key)
+        result = sygna_encrypt_private_data(fake_data, fake_public_key)
         assert mock_ecies_encrypt.call_count == 1
         assert mock_ecies_encrypt.call_args == call(json.dumps(fake_data), fake_public_key)
         assert result == fake_result
 
     @patch('crypto.ecies.ecies_decrypt')
-    def test_sygna_decode_private_data(self, mock_ecies_decrypt):
+    def test_sygna_decrypt_private_data(self, mock_ecies_decrypt):
         fake_data = 'a939a2c1f47d5d5f1a17148c7ac53b3d16b13adc9adc37e137'
         fake_private_key = '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
         fake_result = "{\"key\":\"value\"}"
         mock_ecies_decrypt.return_value = fake_result
-        result = sygna_decode_private_data(fake_data, fake_private_key)
+        result = sygna_decrypt_private_data(fake_data, fake_private_key)
         assert mock_ecies_decrypt.call_count == 1
         assert mock_ecies_decrypt.call_args == call(fake_data, fake_private_key)
         assert result == json.loads(fake_result)

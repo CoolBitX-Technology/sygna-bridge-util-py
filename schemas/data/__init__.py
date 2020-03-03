@@ -3,7 +3,7 @@ from .permission_request import get_permission_request_schema
 from .txid import get_txid_schema
 from .callback import get_callback_schema
 
-__ALL__ = [
+__all__ = [
     'get_permission_schema',
     'get_permission_request_schema',
     'get_txid_schema',
