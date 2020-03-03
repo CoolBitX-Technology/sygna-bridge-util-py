@@ -1,6 +1,9 @@
-from ecdsa import SigningKey, SECP256k1, util
+from ecdsa import util
+from ecdsa.keys import SigningKey
+from ecdsa.curves import SECP256k1
 import json
 from hashlib import sha256
+
 
 def sign_message(message: dict, private_key: str) -> str:
     """sign utf-8 message with private message"""
@@ -11,7 +14,6 @@ def sign_message(message: dict, private_key: str) -> str:
 
     message_str = json.dumps(message, separators=(',', ':'))
     message_b = message_str.encode(encoding='utf-8')
-    print(f'message_str = {message_str}')
     private_key_b_obj = bytearray.fromhex(private_key)
     sk = SigningKey.from_string(string=private_key_b_obj, curve=SECP256k1)
     sig = sk.sign_deterministic(data=message_b, hashfunc=sha256, sigencode=util.sigencode_string_canonize)
