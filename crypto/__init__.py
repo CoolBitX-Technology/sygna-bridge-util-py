@@ -9,6 +9,7 @@ from .main import (
 )
 
 from .sign import sign_message
+from .verify import verify_data, verify_message
 
 __ALL__ = [
     'sygna_encode_private_data',
@@ -18,5 +19,7 @@ __ALL__ = [
     'sign_callback',
     'sign_permission',
     'sign_txid',
-    'sign_message'
+    'sign_message',
+    'verify_data',
+    'verify_message'
 ]

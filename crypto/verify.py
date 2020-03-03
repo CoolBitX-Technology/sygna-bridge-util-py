@@ -17,7 +17,6 @@ def verify_data(data: dict, public_key: str = SYGNA_BRIDGE_CENTRAL_PUBKEY) -> bo
         bool
     """
     signature = ''
-    print(f'verify_data data={data}')
     copy_data = copy.deepcopy(data)
     if 'signature' in copy_data:
         signature = copy_data['signature']
@@ -27,12 +26,11 @@ def verify_data(data: dict, public_key: str = SYGNA_BRIDGE_CENTRAL_PUBKEY) -> bo
 
 
 def verify_message(message: Union[dict, str], signature: str, public_key: str) -> bool:
-    """ verify message(utf-8) with signature and public key"""
+    """ verify message(utf-8) with signature and public_key"""
+    if isinstance(message, dict) is False and isinstance(message, str) is False:
+        raise TypeError('message should be dict or str')
 
-    if isinstance(message, dict):
-        message_str = json.dumps(message, separators=(',', ':'))
-    if isinstance(message, str):
-        message_str = message
+    message_str = message if isinstance(message, str) else json.dumps(message, separators=(',', ':'))
 
     message_b = message_str.encode('utf-8')
     public_key_b_obj = bytearray.fromhex(public_key)
