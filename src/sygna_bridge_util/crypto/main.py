@@ -3,7 +3,7 @@ import json
 from sygna_bridge_util.validator import (
     validate_permission_schema,
     validate_permission_request_schema,
-    validate_txid_schema,
+    validate_transaction_id_schema,
     validate_callback_schema,
     validate_private_key
 )
@@ -136,8 +136,8 @@ def sign_permission(data: dict, private_key: str) -> dict:
     return sign_data(data_to_sign, private_key)
 
 
-def sign_txid(data: dict, private_key: str) -> dict:
-    """ sign txid data
+def sign_transaction_id(data: dict, private_key: str) -> dict:
+    """ sign transaction id data
 
     Args:
         data(dict):{
@@ -153,7 +153,7 @@ def sign_txid(data: dict, private_key: str) -> dict:
         Exception('parameters are not valid')
     """
 
-    validate_txid_schema(data)
+    validate_transaction_id_schema(data)
     validate_private_key(private_key)
 
     data_to_sign = {

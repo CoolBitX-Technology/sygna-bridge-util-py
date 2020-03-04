@@ -294,11 +294,11 @@ class ApiTest(unittest.TestCase):
             pytest.fail('Unexpected ValidationError')
 
     @patch.object(API, 'post_sb')
-    @patch.object(main, 'validate_post_txid_schema')
-    def test_post_transaction_id(self, mock_validate_post_txid_schema, mock_post_sb):
+    @patch.object(main, 'validate_post_transaction_id_schema')
+    def test_post_transaction_id(self, mock_validate_post_transaction_id_schema, mock_post_sb):
         instance = API(ORIGINATOR_API_KEY, DOMAIN)
 
-        mock_validate_post_txid_schema.side_effect = ValidationError(
+        mock_validate_post_transaction_id_schema.side_effect = ValidationError(
             'validate_post_txid_schema raise exception')
 
         post_transaction_id_data = {
@@ -308,17 +308,17 @@ class ApiTest(unittest.TestCase):
         with pytest.raises(ValidationError) as exception:
             instance.post_transaction_id(post_transaction_id_data)
         assert 'validate_post_txid_schema raise exception' == str(exception.value)
-        assert mock_validate_post_txid_schema.call_count == 1
-        assert mock_validate_post_txid_schema.call_args == call(post_transaction_id_data)
+        assert mock_validate_post_transaction_id_schema.call_count == 1
+        assert mock_validate_post_transaction_id_schema.call_args == call(post_transaction_id_data)
 
-        mock_validate_post_txid_schema.side_effect = None
+        mock_validate_post_transaction_id_schema.side_effect = None
         fake_post_transaction_id_response = {"status": "ok"}
         mock_post_sb.return_value = fake_post_transaction_id_response
         try:
             response = instance.post_transaction_id(post_transaction_id_data)
             assert response == fake_post_transaction_id_response
-            assert mock_validate_post_txid_schema.call_count == 2
-            assert mock_validate_post_txid_schema.call_args == call(post_transaction_id_data)
+            assert mock_validate_post_transaction_id_schema.call_count == 2
+            assert mock_validate_post_transaction_id_schema.call_args == call(post_transaction_id_data)
             assert mock_post_sb.call_count == 1
             assert mock_post_sb.call_args == call(DOMAIN + 'api/v1/bridge/transaction/txid',
                                                   post_transaction_id_data)

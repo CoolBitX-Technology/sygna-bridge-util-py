@@ -5,7 +5,7 @@ from sygna_bridge_util.crypto import (
     sign_permission_request,
     sign_callback,
     sign_permission,
-    sign_txid
+    sign_transaction_id
 )
 
 
@@ -117,7 +117,7 @@ def test_sign_permission():
     assert result['signature'] == expected_signature
 
 
-def test_sign_txid():
+def test_sign_transaction_id():
     fake_data = {
         'transfer_id': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
         'txid': '9d5f8e32aa87dd5e787b766990f74cf3a961b4e439a56670b07569c846fe473d'
@@ -126,7 +126,7 @@ def test_sign_txid():
     # signature from javascript util
     expected_signature = 'a9ee40c9b65589cbce0352809463fb496d47a4b181723c2add0c9a3cad14792a' \
                          '6d714e245b7052b23a7ff532d3a5c2454f48821f2f4503106e9c5d2b03b09554'
-    result = sign_txid(fake_data, fake_private_key)
+    result = sign_transaction_id(fake_data, fake_private_key)
     assert result['signature'] == expected_signature
 
 
@@ -136,4 +136,4 @@ if __name__ == '__main__':
     test_sign_permission_request()
     test_sign_callback()
     test_sign_permission()
-    test_sign_txid()
+    test_sign_transaction_id()

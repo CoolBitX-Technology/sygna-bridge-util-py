@@ -10,7 +10,7 @@ from sygna_bridge_util.crypto import (
     sign_permission_request,
     sign_callback,
     sign_permission,
-    sign_txid
+    sign_transaction_id
 )
 from sygna_bridge_util.crypto import main
 
@@ -284,29 +284,29 @@ class CryptoTest(unittest.TestCase):
 
     @patch.object(main, 'sign_data')
     @patch.object(main, 'validate_private_key')
-    @patch.object(main, 'validate_txid_schema')
-    def test_sign_txid(self, mock_validate_txid_schema, mock_validate_private_key, mock_sign_data):
-        mock_validate_txid_schema.side_effect = Exception('validate_txid_schema raise exception')
+    @patch.object(main, 'validate_transaction_id_schema')
+    def test_sign_transaction_id(self, mock_validate_transaction_id_schema, mock_validate_private_key, mock_sign_data):
+        mock_validate_transaction_id_schema.side_effect = Exception('validate_txid_schema raise exception')
         fake_data = {
             'transfer_id': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
             'txid': '9d5f8e32aa87dd5e787b766990f74cf3a961b4e439a56670b07569c846fe473d'
         }
         fake_private_key = '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
         with pytest.raises(Exception) as exception:
-            sign_txid(fake_data, fake_private_key)
+            sign_transaction_id(fake_data, fake_private_key)
         assert 'validate_txid_schema raise exception' == str(exception.value)
-        assert mock_validate_txid_schema.call_count == 1
-        assert mock_validate_txid_schema.call_args == call(fake_data)
+        assert mock_validate_transaction_id_schema.call_count == 1
+        assert mock_validate_transaction_id_schema.call_args == call(fake_data)
         assert mock_validate_private_key.call_count == 0
         assert mock_sign_data.call_count == 0
 
-        mock_validate_txid_schema.side_effect = None
+        mock_validate_transaction_id_schema.side_effect = None
         mock_validate_private_key.side_effect = Exception('validate_private_key raise exception')
         with pytest.raises(Exception) as exception:
-            sign_txid(fake_data, fake_private_key)
+            sign_transaction_id(fake_data, fake_private_key)
         assert 'validate_private_key raise exception' == str(exception.value)
-        assert mock_validate_txid_schema.call_count == 2
-        assert mock_validate_txid_schema.call_args == call(fake_data)
+        assert mock_validate_transaction_id_schema.call_count == 2
+        assert mock_validate_transaction_id_schema.call_args == call(fake_data)
         assert mock_validate_private_key.call_count == 1
         assert mock_validate_private_key.call_args == call(fake_private_key)
         assert mock_sign_data.call_count == 0
@@ -315,9 +315,9 @@ class CryptoTest(unittest.TestCase):
         fake_result = copy.deepcopy(fake_data)
         fake_result['signature'] = '4544fc0741c543056d51668198428a45e972bbc5023111e57a7854c'
         mock_sign_data.return_value = fake_result
-        result = sign_txid(fake_data, fake_private_key)
-        assert mock_validate_txid_schema.call_count == 3
-        assert mock_validate_txid_schema.call_args == call(fake_data)
+        result = sign_transaction_id(fake_data, fake_private_key)
+        assert mock_validate_transaction_id_schema.call_count == 3
+        assert mock_validate_transaction_id_schema.call_args == call(fake_data)
         assert mock_validate_private_key.call_count == 2
         assert mock_validate_private_key.call_args == call(fake_private_key)
         assert mock_sign_data.call_count == 1

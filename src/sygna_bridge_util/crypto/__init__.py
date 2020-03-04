@@ -5,7 +5,7 @@ from .main import (
     sign_permission_request,
     sign_callback,
     sign_permission,
-    sign_txid
+    sign_transaction_id
 )
 
 from .sign import sign_message
@@ -18,7 +18,7 @@ __all__ = [
     'sign_permission_request',
     'sign_callback',
     'sign_permission',
-    'sign_txid',
+    'sign_transaction_id',
     'sign_message',
     'verify_data',
     'verify_message'

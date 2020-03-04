@@ -6,7 +6,7 @@ from sygna_bridge_util.validator import (
     validate_transfer_id,
     validate_post_permission_schema,
     validate_post_permission_request_schema,
-    validate_post_txid_schema
+    validate_post_transaction_id_schema
 )
 
 
@@ -194,6 +194,6 @@ class API:
          Raises:
             Exception('send_tx_id_dict invalid error')
          """
-        validate_post_txid_schema(data)
+        validate_post_transaction_id_schema(data)
         url = self.domain + 'api/v1/bridge/transaction/txid'
         return self.post_sb(url, data)

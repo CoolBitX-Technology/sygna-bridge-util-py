@@ -7,11 +7,11 @@ from sygna_bridge_util.validator import (
     validate_schema,
     validate_permission_schema,
     validate_permission_request_schema,
-    validate_txid_schema,
+    validate_transaction_id_schema,
     validate_callback_schema,
     validate_post_permission_schema,
     validate_post_permission_request_schema,
-    validate_post_txid_schema
+    validate_post_transaction_id_schema
 )
 from sygna_bridge_util.schemas import (
     get_permission_request_schema,
@@ -74,7 +74,7 @@ class ValidateSchemaTest(unittest.TestCase):
     @patch.object(validateschema, 'validate_schema')
     def test_validate_txid_schema(self, mock_validate_schema):
         data = {"key": "value"}
-        validate_txid_schema(data)
+        validate_transaction_id_schema(data)
         assert mock_validate_schema.call_count == 1
         assert mock_validate_schema.call_args == call(data, get_txid_schema())
 
@@ -152,7 +152,7 @@ class ValidateSchemaTest(unittest.TestCase):
     @patch.object(validateschema, 'validate_schema')
     def test_validate_post_txid_schema(self, mock_validate_schema):
         data = {"key": "value"}
-        validate_post_txid_schema(data)
+        validate_post_transaction_id_schema(data)
         assert mock_validate_schema.call_count == 1
         assert mock_validate_schema.call_args == call(data, get_post_txid_schema())
 

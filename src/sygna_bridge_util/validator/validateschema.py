@@ -27,7 +27,7 @@ def validate_permission_request_schema(data: dict) -> None:
         validate_expire_date(data['expire_date'])
 
 
-def validate_txid_schema(data: dict) -> None:
+def validate_transaction_id_schema(data: dict) -> None:
     validate_schema(data, get_txid_schema())
 
 
@@ -47,5 +47,5 @@ def validate_post_permission_request_schema(data: dict) -> None:
         validate_expire_date(data['data']['expire_date'])
 
 
-def validate_post_txid_schema(data: dict) -> None:
+def validate_post_transaction_id_schema(data: dict) -> None:
     validate_schema(data, get_post_txid_schema())
