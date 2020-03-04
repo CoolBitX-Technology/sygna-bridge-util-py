@@ -5,13 +5,16 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "*"
-jsonobject = "*"
+freezegun = "*"
 
 [packages]
 requests = "*"
-ecdsa = "*"
+jsonschema = "*"
+rfc3986-validator = "*"
+rfc3339-validator = "*"
 eciespy = "*"
-pycrypto = "*"
+ecdsa = "*"
+pycryptodome = "*"
 
 [requires]
 python_version = "3.7"
