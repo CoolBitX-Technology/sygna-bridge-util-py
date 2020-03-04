@@ -18,7 +18,7 @@ def get_requirements():
 
 setup(
     name='sygna-bridge-util',
-    version='0.0.3',
+    version='0.0.4',
     packages=find_packages("src"),
     package_dir={"": "src"},
     tests_require=['pytest'],
@@ -26,8 +26,8 @@ setup(
     license='MIT',
     author='kunming.liu',
     author_email='kunming@coolbitx.com',
-    description='This is a Python library to help you build servers/services within Sygna Bridge Ecosystem. '
-                'For more detail information about Sygna Bridge, please go through the '
-                'Official Sygna Bridge API Document.',
+    description='This is a Python library to help you build servers/services within Sygna Bridge Ecosystem.',
+    long_description=read("README.md"),
+    keywords="sygna-bridge-util sygna bridge sygna-bridge ecosystem",
     python_requires='>=3.7',
 )
