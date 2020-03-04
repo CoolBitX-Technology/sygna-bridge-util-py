@@ -1,4 +1,4 @@
-# readme
+# Python Sygna Bridge Util
 
 This is a Python library to help you build servers/servies within Sygna Bridge Ecosystem. For more detail information about Sygna Bridge, please go through the [Official Sygna Bridge API Document](https://coolbitx.gitlab.io/sygna/bridge/api/#sygna-bridge).
 
@@ -17,7 +17,7 @@ Dealing with encoding, decoding, signing and verifying in Sygna Bridge.
 
 During the communication of VASPs, there are some private information that must be encrypted. We use ECIES(Elliptic Curve Integrated Encryption Scheme) to securely encrypt these private data so that they can only be accessed by the recipient.
 
-```python=
+```python
 sensitive_data = {
     "originator": {
         "name": "Antoine Griezmann",# required and must be in English
@@ -99,7 +99,7 @@ After you create the `API` instance, you can use it to make any API call to comm
 
 ### Get VASP Information
 
-```python=
+```python
 # Get List of VASPs associated with public keys.
 verify = True # set verify to true to verify the signature attached with api response automatically.
 vasps = sb_api_instance.get_vasp_list(verify)
@@ -114,7 +114,7 @@ There are two API calls from **transaction originator** to Sygna Bridge Server d
 
 The full logic of originator would be like the following:
 
-```python=
+```python
 # originator.py
 
 private_sender_info = { 
@@ -188,7 +188,7 @@ post_tx_id_response = sb_api_instance.post_transaction_id(send_tx_id_data)
 
 There is only one api for Beneficiary VASP to call, which is `post_permission`. After the beneficiary server confirm thet legitemacy of a transfer request, they will sign `{ transfer_id, permission_status }` using `sign_permission()` function, and send the result with signature to Sygna Bridge Central Server.
 
-```python=
+```Python
 
 permission_status = "ACCEPTED" # or "REJECTED"
 permission_data = sygna_bridge_util.crypto.sign_permission(
