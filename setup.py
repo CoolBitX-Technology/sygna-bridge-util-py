@@ -28,6 +28,7 @@ setup(
     author_email='kunming@coolbitx.com',
     description='This is a Python library to help you build servers/services within Sygna Bridge Ecosystem.',
     long_description=read("README.md"),
+    long_description_content_type='text/markdown',
     keywords="sygna-bridge-util sygna bridge sygna-bridge ecosystem",
     python_requires='>=3.7',
 )
