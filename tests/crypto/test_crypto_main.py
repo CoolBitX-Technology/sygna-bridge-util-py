@@ -1,4 +1,4 @@
-from sygnabridgeutil.crypto import (
+from sygna_bridge_util.crypto import (
     sygna_encrypt_private_data,
     sygna_decrypt_private_data,
     sign_data,

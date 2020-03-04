@@ -1,13 +1,13 @@
 from . import ecies, sign as sygna_sign
 import json
-from sygnabridgeutil.validator import (
+from sygna_bridge_util.validator import (
     validate_permission_schema,
     validate_permission_request_schema,
     validate_txid_schema,
     validate_callback_schema,
     validate_private_key
 )
-from sygnabridgeutil.config import PermissionStatus
+from sygna_bridge_util.config import PermissionStatus
 
 
 def sygna_encrypt_private_data(data: dict, public_key: str) -> str:

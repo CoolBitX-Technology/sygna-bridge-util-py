@@ -3,7 +3,7 @@ from unittest.mock import patch, call
 import pytest
 import json
 import copy
-from sygnabridgeutil.crypto import (
+from sygna_bridge_util.crypto import (
     sygna_encrypt_private_data,
     sygna_decrypt_private_data,
     sign_data,
@@ -12,11 +12,11 @@ from sygnabridgeutil.crypto import (
     sign_permission,
     sign_txid
 )
-from sygnabridgeutil.crypto import main
+from sygna_bridge_util.crypto import main
 
 
 class CryptoTest(unittest.TestCase):
-    @patch('sygnabridgeutil.crypto.ecies.ecies_encrypt')
+    @patch('sygna_bridge_util.crypto.ecies.ecies_encrypt')
     def test_sygna_encrypt_private_data(self, mock_ecies_encrypt):
         fake_data = {'key': 'value'}
         fake_public_key = 'd4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35'
@@ -27,7 +27,7 @@ class CryptoTest(unittest.TestCase):
         assert mock_ecies_encrypt.call_args == call(json.dumps(fake_data), fake_public_key)
         assert result == fake_result
 
-    @patch('sygnabridgeutil.crypto.ecies.ecies_decrypt')
+    @patch('sygna_bridge_util.crypto.ecies.ecies_decrypt')
     def test_sygna_decrypt_private_data(self, mock_ecies_decrypt):
         fake_data = 'a939a2c1f47d5d5f1a17148c7ac53b3d16b13adc9adc37e137'
         fake_private_key = '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
@@ -38,7 +38,7 @@ class CryptoTest(unittest.TestCase):
         assert mock_ecies_decrypt.call_args == call(fake_data, fake_private_key)
         assert result == json.loads(fake_result)
 
-    @patch('sygnabridgeutil.crypto.sign.sign_message')
+    @patch('sygna_bridge_util.crypto.sign.sign_message')
     def test_sign_data(self, mock_sign_message):
         fake_data = {'key': 'value'}
         fake_private_key = '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'

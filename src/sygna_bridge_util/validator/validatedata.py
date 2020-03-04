@@ -1,5 +1,5 @@
 from datetime import datetime
-from sygnabridgeutil.config import EXPIRE_DATE_MIN_OFFSET
+from sygna_bridge_util.config import EXPIRE_DATE_MIN_OFFSET
 
 
 def validate_private_key(private_key: str) -> None:

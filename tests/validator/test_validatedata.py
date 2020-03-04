@@ -1,6 +1,6 @@
 import pytest
-from sygnabridgeutil.validator import validate_private_key, validate_transfer_id, validate_expire_date
-from sygnabridgeutil.config import EXPIRE_DATE_MIN_OFFSET
+from sygna_bridge_util.validator import validate_private_key, validate_transfer_id, validate_expire_date
+from sygna_bridge_util.config import EXPIRE_DATE_MIN_OFFSET
 from freezegun import freeze_time
 
 

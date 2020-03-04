@@ -1,6 +1,6 @@
 import pytest
 from jsonschema import validate, ValidationError, draft7_format_checker
-from sygnabridgeutil.schemas import get_post_permission_request_schema
+from sygna_bridge_util.schemas import get_post_permission_request_schema
 
 
 def test_get_post_permission_request_schema():

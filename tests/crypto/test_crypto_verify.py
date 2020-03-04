@@ -5,12 +5,12 @@ import json
 from ecdsa.curves import SECP256k1
 from hashlib import sha256
 import copy
-from sygnabridgeutil.crypto import (
+from sygna_bridge_util.crypto import (
     verify_message,
     verify_data
 )
-from sygnabridgeutil.crypto import verify
-from sygnabridgeutil.config import SYGNA_BRIDGE_CENTRAL_PUBKEY
+from sygna_bridge_util.crypto import verify
+from sygna_bridge_util.config import SYGNA_BRIDGE_CENTRAL_PUBKEY
 
 
 class CryptoVerifyTest(unittest.TestCase):

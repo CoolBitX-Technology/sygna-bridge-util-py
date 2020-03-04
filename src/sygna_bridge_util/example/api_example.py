@@ -1,4 +1,4 @@
-from sygnabridgeutil.api import API
+from sygna_bridge_util.api import API
 
 DOMAIN = 'https://test-api.sygna.io/sb/'
 ORIGINATOR_API_KEY = 'a973dc6b71115c6126370191e70fe84d87150067da0ab37616eecd3ae16e288d'

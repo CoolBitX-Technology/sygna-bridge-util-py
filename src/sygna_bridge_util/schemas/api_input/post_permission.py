@@ -1,7 +1,7 @@
-from sygnabridgeutil.config import PermissionStatus, RejectCode
+from sygna_bridge_util.config import PermissionStatus, RejectCode
 import copy
 
-__permission_schema = {
+__post_permission_schema = {
     'type': 'object',
     'properties': {
         'transfer_id': {
@@ -13,6 +13,12 @@ __permission_schema = {
             'type': 'string',
             'minLength': 1,
             'enum': [status.value for status in PermissionStatus]
+        },
+        'signature': {
+            'type': 'string',
+            'minLength': 128,
+            'maxLength': 128,
+            'pattern': '^[0123456789A-Fa-f]+$'
         },
         'expire_date': {
             'type': 'number',
@@ -30,14 +36,15 @@ __permission_schema = {
     },
     'required': [
         'transfer_id',
-        'permission_status'
+        'permission_status',
+        'signature'
     ],
     'additionalProperties': False
 }
 
 
-def get_permission_schema(data: dict) -> dict:
-    clone_schema = copy.deepcopy(__permission_schema)
+def get_post_permission_schema(data: dict) -> dict:
+    clone_schema = copy.deepcopy(__post_permission_schema)
     if 'permission_status' not in data or data['permission_status'] != PermissionStatus.REJECTED.value:
         return clone_schema
 

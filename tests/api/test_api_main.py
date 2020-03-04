@@ -3,11 +3,10 @@ from unittest import mock
 from unittest.mock import patch, call
 import pytest
 import json
-from sygnabridgeutil.api import main
-from sygnabridgeutil.api import API
+from sygna_bridge_util.api import main, API
 from jsonschema import ValidationError
 
-from sygnabridgeutil.config import SYGNA_BRIDGE_CENTRAL_PUBKEY, HTTP_TIMEOUT
+from sygna_bridge_util.config import SYGNA_BRIDGE_CENTRAL_PUBKEY, HTTP_TIMEOUT
 
 ORIGINATOR_API_KEY = "123456789"
 BENEFICIARY_API_KEY = "0987654321"
@@ -45,7 +44,7 @@ class ApiTest(unittest.TestCase):
             timeout=HTTP_TIMEOUT)
 
     @patch.object(API, 'get_sb')
-    @mock.patch('sygnabridgeutil.crypto.verify.verify_data')
+    @mock.patch('sygna_bridge_util.crypto.verify.verify_data')
     def test_get_vasp_list(self, mock_verify, mock_get_sb):
         """ should raise exception if api response is not valid or signature is not valid"""
         instance = API(ORIGINATOR_API_KEY, DOMAIN)

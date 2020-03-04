@@ -1,5 +1,5 @@
 from jsonschema import validate, draft7_format_checker
-from sygnabridgeutil.schemas import (
+from sygna_bridge_util.schemas import (
     get_permission_request_schema,
     get_permission_schema,
     get_txid_schema,

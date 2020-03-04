@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import patch, call
-from sygnabridgeutil.config import PermissionStatus
+from sygna_bridge_util.config import PermissionStatus
 from jsonschema import draft7_format_checker
-from sygnabridgeutil.validator import validateschema
-from sygnabridgeutil.validator import (
+from sygna_bridge_util.validator import validateschema
+from sygna_bridge_util.validator import (
     validate_schema,
     validate_permission_schema,
     validate_permission_request_schema,
@@ -13,7 +13,7 @@ from sygnabridgeutil.validator import (
     validate_post_permission_request_schema,
     validate_post_txid_schema
 )
-from sygnabridgeutil.schemas import (
+from sygna_bridge_util.schemas import (
     get_permission_request_schema,
     get_permission_schema,
     get_txid_schema,

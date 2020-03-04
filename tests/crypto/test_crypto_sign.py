@@ -4,7 +4,7 @@ import json
 from ecdsa import util
 from ecdsa.curves import SECP256k1
 from hashlib import sha256
-from sygnabridgeutil.crypto import (
+from sygna_bridge_util.crypto import (
     sign_message
 )
 

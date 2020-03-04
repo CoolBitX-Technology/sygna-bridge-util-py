@@ -1,7 +1,7 @@
 import pytest
 from jsonschema import validate, ValidationError, draft7_format_checker
-from sygnabridgeutil.config import PermissionStatus, RejectCode
-from sygnabridgeutil.schemas import get_permission_schema
+from sygna_bridge_util.config import PermissionStatus, RejectCode
+from sygna_bridge_util.schemas import get_permission_schema
 
 
 def test_get_permission_schema():

@@ -1,5 +1,5 @@
 import pytest
-from sygnabridgeutil.schemas import get_post_txid_schema
+from sygna_bridge_util.schemas import get_post_txid_schema
 from jsonschema import validate, ValidationError, draft7_format_checker
 
 

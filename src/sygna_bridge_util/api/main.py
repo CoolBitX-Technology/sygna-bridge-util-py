@@ -1,8 +1,8 @@
 import requests
-from sygnabridgeutil.config import SYGNA_BRIDGE_CENTRAL_PUBKEY, HTTP_TIMEOUT
-import sygnabridgeutil.crypto.verify
+from sygna_bridge_util.config import SYGNA_BRIDGE_CENTRAL_PUBKEY, HTTP_TIMEOUT
+import sygna_bridge_util.crypto.verify
 import json
-from sygnabridgeutil.validator import (
+from sygna_bridge_util.validator import (
     validate_transfer_id,
     validate_post_permission_schema,
     validate_post_permission_request_schema,
@@ -69,7 +69,7 @@ class API:
         if not validate:
             return result['vasp_data']
 
-        valid = sygnabridgeutil.crypto.verify.verify_data(
+        valid = sygna_bridge_util.crypto.verify.verify_data(
             result, SYGNA_BRIDGE_CENTRAL_PUBKEY)
         if not valid:
             raise ValueError('get VASP info error: invalid signature.')

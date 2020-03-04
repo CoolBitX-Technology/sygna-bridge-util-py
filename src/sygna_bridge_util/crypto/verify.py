@@ -3,7 +3,7 @@ import copy
 from ecdsa.keys import VerifyingKey
 from ecdsa.curves import SECP256k1
 from typing import Union
-from sygnabridgeutil.config import SYGNA_BRIDGE_CENTRAL_PUBKEY
+from sygna_bridge_util.config import SYGNA_BRIDGE_CENTRAL_PUBKEY
 from hashlib import sha256
 
 
