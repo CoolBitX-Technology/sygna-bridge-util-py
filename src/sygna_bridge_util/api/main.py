@@ -8,6 +8,11 @@ from sygna_bridge_util.validator import (
     validate_post_permission_request_schema,
     validate_post_transaction_id_schema
 )
+from sygna_bridge_util.utils import (
+    sort_post_transaction_id_data,
+    sort_post_permission_request_data,
+    sort_post_permission_data
+)
 
 
 class API:
@@ -19,7 +24,7 @@ class API:
         """HTTP GET request to Sygna Bridge
 
         Args:
-            url (str)
+            url: str
 
         Returns:
             dict
@@ -32,8 +37,8 @@ class API:
         """HTTP Post request to Sygna Bridge
 
         Args:
-            url (str)
-            body (dict)
+            url: str
+            body: dict
 
         Returns:
             dict
@@ -51,10 +56,14 @@ class API:
         """get list of registered VASP associated with public key
 
          Args:
-            validate (bool): validate whether to validate returned vasp list data.
+            validate: bool. validate whether to validate returned vasp list data.
 
          Returns:
-            dict({ vasp_name:str, vasp_code:str, vasp_pubkey:str })
+            dict{
+                vasp_name: str
+                vasp_code: str
+                vasp_pubkey: str
+            }[]
 
          Raises:
             Exception('Request VASPs failed')
@@ -80,8 +89,8 @@ class API:
         """A Wrapper function of get_vasp_list to return specific VASP's public key.
 
          Args:
-            vasp_code (str): vasp code
-            validate (bool): validate whether to validate returned vasp list data.
+            vasp_code: str
+            validate: bool. validate whether to validate returned vasp list data.
 
          Returns:
             str. uncompressed public key
@@ -105,95 +114,128 @@ class API:
         """get detail of particular transaction premission request
 
          Args:
-            transfer_id (str): transfer id
+            transfer_id: str
 
          Returns:
-            dict({ transferData:dict(
-                {
-                    transfter_id: str,
-                    private_info: str,
-                    transaction: dict(
-                        {
-                            beneficiary_vasp_code: str,
-                            transaction_currency: str,
-                            originator_vasp_code: str
-                        }
-                    ),
-                    permission_request_data_signature: str,
-                    permission_status: str,
+            dict{
+                transferData:dict{
+                    transfer_id: str
+                    private_info: str
+                    transaction: dict{
+                        originator_vasp_code: str
+                        originator_addrs: str[]
+                        Optional originator_addrs_extra: dict
+                        beneficiary_vasp_code: str
+                        beneficiary_addrs: str[]
+                        Optional beneficiary_addrs_extra: dict
+                        transaction_currency: str
+                        amount: number
+                    }
+                    data_dt: str
+                    permission_request_data_signature: str
+                    permission_status: str. ACCEPTED or REJECTED
                     permission_signature: str
+                    txid: str
+                    txid_signature: str
+                    created_at: str
+                    transfer_to_originator_time: str
                 }
-            ), vasp_code:str, signature:str })
+                signature: str
+            }
          """
         validate_transfer_id(transfer_id)
         url = self.domain + 'api/v1/bridge/transaction/status?transfer_id=' + transfer_id
         return self.get_sb(url)
 
-    def post_permission(self, post_permission_data: dict) -> dict:
+    def post_permission(self, data: dict) -> dict:
         """Notify Sygna Bridge that you have confirmed specific permission Request from other VASP.
         Should be called by Beneficiary Server
 
          Args:
-            post_permission_data (dict): {
+            data (dict): {
                 transfer_id:str,
                 permission_status:str,
-                signature:str,
                 Optional expire_date(int)
                 Optional reject_code(str) : BVRC001,BVRC002,BVRC003,BVRC004 or BVRC999
-                Optional reject_message(str)
+                Optional reject_message(str),
+                signature:str
             }
 
          Returns:
-            dict.
+            dict{
+                status: str
+            }
 
          Raises:
-            Exception('permission_data invalid error')
+            ValidationError
          """
-        validate_post_permission_schema(post_permission_data)
+        validate_post_permission_schema(data)
+
+        sorted_post_permission_data = sort_post_permission_data(data)
         url = self.domain + 'api/v1/bridge/transaction/permission'
-        return self.post_sb(url, post_permission_data)
+        return self.post_sb(url, sorted_post_permission_data)
 
     def post_permission_request(self, data: dict) -> dict:
         """Should be called by Originator.
 
-         Args: data : dict{
-            data(dict): Private sender info encoded by crypto.sygnaEncodePrivateObj{
-                private_info: str,
-                transaction: dict,
-                data_dat: str,
-                signature: str,
-                Optional expire_date: int
-            },
-            callback(dict): {
-                callback_url: str,
-                signature:str
-            }
-          }
-
+         Args:
+             data: dict{
+                data: dict{
+                    private_info: str
+                    transaction: dict{
+                        originator_vasp_code: str
+                        originator_addrs: str[]
+                        Optional originator_addrs_extra: dict
+                        beneficiary_vasp_code: str
+                        beneficiary_addrs: str[]
+                        Optional beneficiary_addrs_extra: dict
+                        transaction_currency: str
+                        amount: number
+                    }
+                    data_dt: str
+                    Optional expire_date: int
+                    signature: str
+                }
+                callback: dict{
+                    callback_url: str
+                    signature: str
+                }
+             }
 
          Returns:
-            {transfer_id: str}
+            dict{
+                transfer_id: str
+            }
 
          Raises:
-            Exception('request_data/callback invalid error')
+            ValidationError
          """
         validate_post_permission_request_schema(data)
+
+        sorted_post_permission_request_data = sort_post_permission_request_data(data)
         url = self.domain + 'api/v1/bridge/transaction/permission-request'
-        params = {'data': data['data'], 'callback': data['callback']}
-        return self.post_sb(url, params)
+        return self.post_sb(url, sorted_post_permission_request_data)
 
     def post_transaction_id(self, data: dict) -> dict:
         """Send broadcasted transaction id to Sygna Bridge for purpose of storage.
 
          Args:
-            data ({transfer_id: str, txid:str, signature:str})
+            data: dict{
+                transfer_id: str
+                txid: str
+                signature: str
+            }
 
          Returns:
-            dict
+            dict{
+                status: str
+            }
 
          Raises:
-            Exception('send_tx_id_dict invalid error')
+            ValidationError
          """
         validate_post_transaction_id_schema(data)
+
+        sorted_post_transaction_id_data = sort_post_transaction_id_data(data)
         url = self.domain + 'api/v1/bridge/transaction/txid'
-        return self.post_sb(url, data)
+        return self.post_sb(url, sorted_post_transaction_id_data)
