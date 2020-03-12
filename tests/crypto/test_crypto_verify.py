@@ -11,6 +11,7 @@ from sygna_bridge_util.crypto import (
 )
 from sygna_bridge_util.crypto import verify
 from sygna_bridge_util.config import SYGNA_BRIDGE_CENTRAL_PUBKEY
+from .fake_data import FAKE_PUBLIC_KEY
 
 
 class CryptoVerifyTest(unittest.TestCase):
@@ -27,15 +28,13 @@ class CryptoVerifyTest(unittest.TestCase):
             'reject_code': 'BVRC999',
             'reject_message': 'service_downtime'
         }
-        fake_public_key = '045b409c8c15fd82744ce4f7f86d65f27d605d945d4c4eee0e4e2515a3894b9d157483cc5e49' \
-                          'c62c07b46cd59bc980445d9cf987622d66df20c6c3634f6eb05085'
-        fake_signature = '9594dab35733bf35501d3a37319c757c0311ce825e6274e54d860798553671b9597622618c4a3c' \
-                         '05930a07c471d1910ad927225f4d9b33b864b3a14715f56bad'
+        fake_signature = 'd4d0aff2a18a499b76dfdbe688ea7f07c16145af81dc8c351df4e008228f75790a3' \
+                         '1c2245f6d0e560645acde196ab19aa3871dd18fbe23dd22bb6a407efd73c9'
         mock_verify = Mock(return_value=True)
         mock_verifyingKey_from_string.return_value = Mock(verify=mock_verify)
 
-        result = verify_message(fake_data, fake_signature, fake_public_key)
-        public_key_b_obj = bytearray.fromhex(fake_public_key)
+        result = verify_message(fake_data, fake_signature, FAKE_PUBLIC_KEY)
+        public_key_b_obj = bytearray.fromhex(FAKE_PUBLIC_KEY)
         signature_b_obj = bytearray.fromhex(fake_signature)
         message_b = json.dumps(fake_data, separators=(',', ':')).encode('utf-8')
         assert mock_verifyingKey_from_string.call_count == 1
@@ -47,7 +46,7 @@ class CryptoVerifyTest(unittest.TestCase):
         assert result is True
 
         fake_data_str = json.dumps(fake_data, separators=(',', ':'))
-        result = verify_message(fake_data, fake_signature, fake_public_key)
+        result = verify_message(fake_data, fake_signature, FAKE_PUBLIC_KEY)
         message_b = fake_data_str.encode('utf-8')
         assert mock_verifyingKey_from_string.call_count == 2
         assert mock_verifyingKey_from_string.call_args == call(string=public_key_b_obj, curve=SECP256k1)
@@ -66,12 +65,10 @@ class CryptoVerifyTest(unittest.TestCase):
             'reject_message': 'service_downtime',
             'signature': ''
         }
-        fake_public_key = '045b409c8c15fd82744ce4f7f86d65f27d605d945d4c4eee0e4e2515a3894b9d157483cc5e49' \
-                          'c62c07b46cd59bc980445d9cf987622d66df20c6c3634f6eb05085'
-        fake_signature = 'd4d0aff2a18a499b76dfdbe688ea7f07c16145af81dc8c351df4e008228f75790a31c2245f6d0' \
-                         'e560645acde196ab19aa3871dd18fbe23dd22bb6a407efd73c9'
+        fake_signature = 'd4d0aff2a18a499b76dfdbe688ea7f07c16145af81dc8c351df4e008228f75790a3' \
+                         '1c2245f6d0e560645acde196ab19aa3871dd18fbe23dd22bb6a407efd73c9'
 
-        result = verify_message(fake_data, fake_signature, fake_public_key)
+        result = verify_message(fake_data, fake_signature, FAKE_PUBLIC_KEY)
         assert result is True
 
     @patch.object(verify, 'verify_message')
@@ -82,11 +79,9 @@ class CryptoVerifyTest(unittest.TestCase):
             'expire_date': 4107667801000,
             'reject_code': 'BVRC999',
             'reject_message': 'service_downtime',
-            'signature': '9594dab35733bf35501d3a37319c757c0311ce825e6274e54d860798553671b9597622618c4a3c'
-                         '05930a07c471d1910ad927225f4d9b33b864b3a14715f56bad'
+            'signature': 'd4d0aff2a18a499b76dfdbe688ea7f07c16145af81dc8c351df4e008228f75790a31c2245f6d0e5'
+                         '60645acde196ab19aa3871dd18fbe23dd22bb6a407efd73c9'
         }
-        fake_public_key = '045b409c8c15fd82744ce4f7f86d65f27d605d945d4c4eee0e4e2515a3894b9d157483cc5e49' \
-                          'c62c07b46cd59bc980445d9cf987622d66df20c6c3634f6eb05085'
         mock_verify_message.return_value = False
         result = verify_data(fake_data)
 
@@ -98,9 +93,9 @@ class CryptoVerifyTest(unittest.TestCase):
         assert result is False
 
         mock_verify_message.return_value = True
-        result = verify_data(fake_data, fake_public_key)
+        result = verify_data(fake_data, FAKE_PUBLIC_KEY)
         assert mock_verify_message.call_count == 2
-        assert mock_verify_message.call_args == call(clone_fake_data, signature, fake_public_key)
+        assert mock_verify_message.call_args == call(clone_fake_data, signature, FAKE_PUBLIC_KEY)
         assert result is True
 
     def test_verify_data(self):
@@ -113,9 +108,7 @@ class CryptoVerifyTest(unittest.TestCase):
             'signature': 'd4d0aff2a18a499b76dfdbe688ea7f07c16145af81dc8c351df4e008228f75790a31c2245f6d0e5'
                          '60645acde196ab19aa3871dd18fbe23dd22bb6a407efd73c9'
         }
-        fake_public_key = '045b409c8c15fd82744ce4f7f86d65f27d605d945d4c4eee0e4e2515a3894b9d157483cc5e49' \
-                          'c62c07b46cd59bc980445d9cf987622d66df20c6c3634f6eb05085'
-        result = verify_data(fake_data, fake_public_key)
+        result = verify_data(fake_data, FAKE_PUBLIC_KEY)
         assert result is True
 
 
