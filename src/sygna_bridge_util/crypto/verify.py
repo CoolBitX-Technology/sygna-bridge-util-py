@@ -11,16 +11,14 @@ def verify_data(data: dict, public_key: str = SYGNA_BRIDGE_CENTRAL_PUBKEY) -> bo
     """ verify data with provided public key or default sygna bridge public key
 
     Args:
-        data (dict)
-        public_key (str)
+        data: dict
+        public_key: str
     Returns:
         bool
     """
-    signature = ''
     copy_data = copy.deepcopy(data)
-    if 'signature' in copy_data:
-        signature = copy_data['signature']
-        copy_data['signature'] = ''
+    signature = copy_data['signature']
+    copy_data['signature'] = ''
 
     return verify_message(copy_data, signature, public_key)
 
