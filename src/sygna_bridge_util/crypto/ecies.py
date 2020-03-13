@@ -45,7 +45,7 @@ def ecies_encrypt(msg: str, receiver_pk: Union[str, bytes], ) -> str:
     return result.hex()
 
 
-def ecies_decrypt(enc_message: str, private_key: str) -> bytes:
+def ecies_decrypt(enc_message: str, private_key: str) -> str:
 
     """Sygna Bridge ECIES Decrypt.
      Args:
