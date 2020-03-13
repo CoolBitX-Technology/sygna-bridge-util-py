@@ -4,6 +4,11 @@ from unittest.mock import patch, call
 import pytest
 import json
 from sygna_bridge_util.api import main, API
+from sygna_bridge_util.utils import (
+    sort_post_permission_data,
+    sort_post_permission_request_data,
+    sort_post_transaction_id_data
+)
 from jsonschema import ValidationError
 
 from sygna_bridge_util.config import SYGNA_BRIDGE_CENTRAL_PUBKEY, HTTP_TIMEOUT
@@ -209,9 +214,10 @@ class ApiTest(unittest.TestCase):
         mock_validate_post_permission_schema.side_effect = ValidationError(
             'validate_post_permission_schema raise exception')
         post_permission_data = {
+            'expire_date': 0,
+            'signature': '123456789',
             'transfer_id': '12345',
             'permission_status': 'ACCEPTED',
-            'expire_date': 0,
             'reject_code': 'BVRC001',
             'reject_message': 'unsupported_currency'
         }
@@ -224,13 +230,28 @@ class ApiTest(unittest.TestCase):
         mock_validate_post_permission_schema.side_effect = None
         fake_post_permission_response = {"status": "OK"}
         mock_post_sb.return_value = fake_post_permission_response
+        sorted_post_permission_data = sort_post_permission_data(post_permission_data)
         try:
             response = instance.post_permission(post_permission_data)
             assert response == fake_post_permission_response
             assert mock_validate_post_permission_schema.call_count == 2
             assert mock_validate_post_permission_schema.call_args == call(post_permission_data)
             assert mock_post_sb.call_count == 1
-            assert mock_post_sb.call_args == call(DOMAIN + 'api/v1/bridge/transaction/permission', post_permission_data)
+            assert mock_post_sb.call_args == call(DOMAIN + 'api/v1/bridge/transaction/permission',
+                                                  sorted_post_permission_data)
+        except ValidationError:
+            pytest.fail('Unexpected ValidationError')
+
+        post_permission_data['permission_status'] = 'REJECTED'
+        sorted_post_permission_data = sort_post_permission_data(post_permission_data)
+        try:
+            response = instance.post_permission(post_permission_data)
+            assert response == fake_post_permission_response
+            assert mock_validate_post_permission_schema.call_count == 3
+            assert mock_validate_post_permission_schema.call_args == call(post_permission_data)
+            assert mock_post_sb.call_count == 2
+            assert mock_post_sb.call_args == call(DOMAIN + 'api/v1/bridge/transaction/permission',
+                                                  sorted_post_permission_data)
         except ValidationError:
             pytest.fail('Unexpected ValidationError')
 
@@ -243,31 +264,29 @@ class ApiTest(unittest.TestCase):
             'validate_post_permission_request_schema raise exception')
 
         post_permission_request_data = {
+            'callback': {
+                'signature': '12345',
+                'callback_url': 'http://google.com'
+            },
             'data': {
-                'private_info': '12345',
+                'data_dt': '2019-07-29T06:29:00.123Z',
+                'expire_date': 1582255065000,
                 'transaction': {
-                    'originator_vasp_code': 'ABCDE',
-                    'originator_addrs': [
-                        '1234567890'
-                    ],
                     'originator_addrs_extra': {'DT': '001'},
+                    'originator_vasp_code': 'ABCDE',
                     'beneficiary_vasp_code': 'XYZ12',
                     'beneficiary_addrs': [
                         '0987654321'
                     ],
+                    'amount': 1,
+                    'originator_addrs': [
+                        '1234567890'
+                    ],
                     'beneficiary_addrs_extra': {'DT': '002'},
                     'transaction_currency': '0x80000000',
-                    'amount': 1
                 },
-                'data_dt': '2019-07-29T06:29:00.123Z',
-                'expire_date': 1582255065000,
-                'signature':
-                    '12345'
-            },
-            'callback': {
-                'callback_url': 'http://google.com',
-                'signature':
-                    '12345'
+                'signature':'12345',
+                'private_info': '12345',
             }
         }
         with pytest.raises(ValidationError) as exception:
@@ -279,6 +298,7 @@ class ApiTest(unittest.TestCase):
         mock_validate_post_permission_request_schema.side_effect = None
         fake_post_permission_request_response = {"transfer_id": "abcdefghijk"}
         mock_post_sb.return_value = fake_post_permission_request_response
+        sorted_post_permission_request_data = sort_post_permission_request_data(post_permission_request_data)
         try:
             response = instance.post_permission_request(post_permission_request_data)
             assert response == fake_post_permission_request_response
@@ -286,10 +306,7 @@ class ApiTest(unittest.TestCase):
             assert mock_validate_post_permission_request_schema.call_args == call(post_permission_request_data)
             assert mock_post_sb.call_count == 1
             assert mock_post_sb.call_args == call(DOMAIN + 'api/v1/bridge/transaction/permission-request',
-                                                  {
-                                                      'data': post_permission_request_data['data'],
-                                                      'callback': post_permission_request_data['callback']
-                                                  })
+                                                  sorted_post_permission_request_data)
         except ValidationError:
             pytest.fail('Unexpected ValidationError')
 
@@ -302,8 +319,9 @@ class ApiTest(unittest.TestCase):
             'validate_post_txid_schema raise exception')
 
         post_transaction_id_data = {
+            'txid': '123',
+            'signature': '1234567890',
             'transfer_id': 'ad468f326ebcc2242c32aa6bf7084c44135a068d939e52c08b6d2e86eb9ef725',
-            'txid': '123'
         }
         with pytest.raises(ValidationError) as exception:
             instance.post_transaction_id(post_transaction_id_data)
@@ -314,6 +332,7 @@ class ApiTest(unittest.TestCase):
         mock_validate_post_transaction_id_schema.side_effect = None
         fake_post_transaction_id_response = {"status": "ok"}
         mock_post_sb.return_value = fake_post_transaction_id_response
+        sorted_post_transaction_id_data = sort_post_transaction_id_data(post_transaction_id_data)
         try:
             response = instance.post_transaction_id(post_transaction_id_data)
             assert response == fake_post_transaction_id_response
@@ -321,7 +340,7 @@ class ApiTest(unittest.TestCase):
             assert mock_validate_post_transaction_id_schema.call_args == call(post_transaction_id_data)
             assert mock_post_sb.call_count == 1
             assert mock_post_sb.call_args == call(DOMAIN + 'api/v1/bridge/transaction/txid',
-                                                  post_transaction_id_data)
+                                                  sorted_post_transaction_id_data)
         except ValidationError:
             pytest.fail('Unexpected ValidationError')
 
