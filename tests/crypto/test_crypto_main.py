@@ -25,6 +25,18 @@ def test_sygna_encrypt_and_decrypt_private_data():
     decoded_private_data = sygna_decrypt_private_data(encoded_private_data, FAKE_PRIVATE_KEY)
     assert decoded_private_data == fake_data
 
+    fake_data = 'qwer'
+    encoded_private_data = sygna_encrypt_private_data(fake_data, FAKE_PUBLIC_KEY)
+    decoded_private_data = sygna_decrypt_private_data(encoded_private_data, FAKE_PRIVATE_KEY)
+    assert decoded_private_data == fake_data
+
+    # encoded qwer by javascript util
+    encoded_private_data = '0434aeb62180a8481334ce77ad790bb8be10e6c5a3dfde407bf8137538072de181c78f9a8c19638105656'\
+                           '3e4b5ce914df55bdf95bff268966cfd4a4837c8ed4b34356ada64fd257d10a662c5fdc4d3aca70cc14ebef'\
+                           'afd9008949f0bd2806314969dbb4ca4'
+    decoded_private_data = sygna_decrypt_private_data(encoded_private_data, FAKE_PRIVATE_KEY)
+    assert decoded_private_data == fake_data
+
 
 def test_sign_data():
     fake_data = {'key': 'value'}

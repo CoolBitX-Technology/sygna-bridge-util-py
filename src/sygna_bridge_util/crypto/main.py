@@ -1,5 +1,6 @@
 from . import ecies, sign as sygna_sign
 import json
+from typing import Union
 from sygna_bridge_util.validator import (
     validate_permission_schema,
     validate_permission_request_schema,
@@ -15,23 +16,28 @@ from sygna_bridge_util.utils import (
 )
 
 
-def sygna_encrypt_private_data(data: dict, public_key: str) -> str:
+def sygna_encrypt_private_data(data: Union[dict, str], public_key: str) -> str:
     """ Encrypt private info data to hex string.
     Args:
-        data: dict. private info in data format
+        data: dict or str. private info in data format
         public_key: str. recipient public key in hex string
 
     Returns:
         str. ECIES encoded private message.
     """
-    data_str = json.dumps(data)
+    data_str = data
+    if isinstance(data, dict):
+        data_str = json.dumps(data)
     return ecies.ecies_encrypt(data_str, public_key)
 
 
-def sygna_decrypt_private_data(private_message: str, private_key: str) -> dict:
+def sygna_decrypt_private_data(private_message: str, private_key: str) -> Union[dict, str]:
     """ Decode private info from recipient server."""
     decode_str = ecies.ecies_decrypt(private_message, private_key)
-    return json.loads(decode_str)
+    try:
+        return json.loads(decode_str)
+    except ValueError as e:
+        return decode_str
 
 
 def sign_data(data: dict, private_key: str) -> dict:
