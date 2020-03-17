@@ -1,1 +1,0 @@
-sygna_bridge_util
