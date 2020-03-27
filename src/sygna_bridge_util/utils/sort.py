@@ -128,7 +128,8 @@ def sort_permission_data(permission_data: dict) -> dict:
         sorted_permission_data['expire_date'] = permission_data['expire_date']
 
     if permission_data['permission_status'] == PermissionStatus.REJECTED.value:
-        sorted_permission_data['reject_code'] = permission_data['reject_code']
+        if 'reject_code' in permission_data:
+            sorted_permission_data['reject_code'] = permission_data['reject_code']
         if 'reject_message' in permission_data:
             sorted_permission_data['reject_message'] = permission_data['reject_message']
 
