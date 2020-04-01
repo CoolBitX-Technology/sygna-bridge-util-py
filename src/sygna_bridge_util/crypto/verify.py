@@ -28,8 +28,8 @@ def verify_message(message: Union[dict, str], signature: str, public_key: str) -
     if isinstance(message, dict) is False and isinstance(message, str) is False:
         raise TypeError('message should be dict or str')
 
-    message_str = message if isinstance(message, str) else json.dumps(message, separators=(',', ':'))
-
+    message_str = message if isinstance(message, str) else json.dumps(message, separators=(',', ':'),
+                                                                      ensure_ascii=False)
     message_b = message_str.encode('utf-8')
     public_key_b_obj = bytearray.fromhex(public_key)
     signature_b_obj = bytearray.fromhex(signature)
