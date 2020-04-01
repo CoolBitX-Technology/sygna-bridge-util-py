@@ -43,6 +43,18 @@ class CryptoSignTest(unittest.TestCase):
         assert result == '9594dab35733bf35501d3a37319c757c0311ce825e6274e54d860798553671b959762' \
                          '2618c4a3c05930a07c471d1910ad927225f4d9b33b864b3a14715f56bad'
 
+        fake_data = {
+            'transfer_id': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
+            'permission_status': 'REJECTED',
+            'expire_date': 4107667801000,
+            'reject_code': 'BVRC999',
+            'reject_message': '測試',
+        }
+
+        result = sign_message(fake_data, FAKE_PRIVATE_KEY)
+        assert result == '06263ff8844ba3ddbd30b602dc0dcbf7c33d7a996c9b53ad8f72372f5d15da3d6ba'\
+                         '8d0fb9664c3e110ba7badf85b076e729817276183c27dbea46b25fc83a09b'
+
 
 if __name__ == '__main__':
     unittest.main()

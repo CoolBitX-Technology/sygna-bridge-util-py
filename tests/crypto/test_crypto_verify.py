@@ -71,6 +71,19 @@ class CryptoVerifyTest(unittest.TestCase):
         result = verify_message(fake_data, fake_signature, FAKE_PUBLIC_KEY)
         assert result is True
 
+        fake_data = {
+            'transfer_id': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
+            'permission_status': 'REJECTED',
+            'expire_date': 4107667801000,
+            'reject_code': 'BVRC999',
+            'reject_message': '測試',
+            'signature': ''
+        }
+        fake_signature = '7ec5193636ca339619fb464dbdc0d0446a8095fff41c80329a6babaad73b4eed2e' \
+                         '6f6c31302148fe497224b8e102b09bf1784016f6576602413bf95071c9a31b'
+        result = verify_message(fake_data, fake_signature, FAKE_PUBLIC_KEY)
+        assert result is True
+
     @patch.object(verify, 'verify_message')
     def test_verify_data_mock(self, mock_verify_message):
         fake_data = {
@@ -107,6 +120,18 @@ class CryptoVerifyTest(unittest.TestCase):
             'reject_message': 'service_downtime',
             'signature': 'd4d0aff2a18a499b76dfdbe688ea7f07c16145af81dc8c351df4e008228f75790a31c2245f6d0e5'
                          '60645acde196ab19aa3871dd18fbe23dd22bb6a407efd73c9'
+        }
+        result = verify_data(fake_data, FAKE_PUBLIC_KEY)
+        assert result is True
+
+        fake_data = {
+            'transfer_id': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
+            'permission_status': 'REJECTED',
+            'expire_date': 4107667801000,
+            'reject_code': 'BVRC999',
+            'reject_message': '測試',
+            'signature': '7ec5193636ca339619fb464dbdc0d0446a8095fff41c80329a6babaad73b4eed2e' \
+                         '6f6c31302148fe497224b8e102b09bf1784016f6576602413bf95071c9a31b'
         }
         result = verify_data(fake_data, FAKE_PUBLIC_KEY)
         assert result is True
