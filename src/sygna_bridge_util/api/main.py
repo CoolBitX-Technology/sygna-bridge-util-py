@@ -1,5 +1,9 @@
 import requests
-from sygna_bridge_util.config import SYGNA_BRIDGE_CENTRAL_PUBKEY, HTTP_TIMEOUT
+from sygna_bridge_util.config import (
+    SYGNA_BRIDGE_CENTRAL_PUBKEY,
+    HTTP_TIMEOUT,
+    SYGNA_BRIDGE_CENTRAL_PUBKEY_TEST
+)
 import sygna_bridge_util.crypto.verify
 import json
 from sygna_bridge_util.validator import (
@@ -52,11 +56,12 @@ class API:
             timeout=HTTP_TIMEOUT)
         return response.json()
 
-    def get_vasp_list(self, validate: bool = True) -> [dict]:
+    def get_vasp_list(self, validate: bool = True, is_prod: bool = False) -> [dict]:
         """get list of registered VASP associated with public key
 
          Args:
-            validate: bool. validate whether to validate returned vasp list data.
+            validate: bool. decide whether to validate returned vasp list data.
+            is_prod: bool. decide which public key to use
 
          Returns:
             dict{
@@ -78,19 +83,22 @@ class API:
         if not validate:
             return result['vasp_data']
 
-        valid = sygna_bridge_util.crypto.verify.verify_data(
-            result, SYGNA_BRIDGE_CENTRAL_PUBKEY)
+        pubkey = SYGNA_BRIDGE_CENTRAL_PUBKEY if is_prod is True else SYGNA_BRIDGE_CENTRAL_PUBKEY_TEST
+
+        valid = sygna_bridge_util.crypto.verify.verify_data(result, pubkey)
+
         if not valid:
             raise ValueError('get VASP info error: invalid signature.')
 
         return result['vasp_data']
 
-    def get_vasp_public_key(self, vasp_code: str, validate: bool = True) -> str:
+    def get_vasp_public_key(self, vasp_code: str, validate: bool = True, is_prod: bool = False) -> str:
         """A Wrapper function of get_vasp_list to return specific VASP's public key.
 
          Args:
             vasp_code: str
-            validate: bool. validate whether to validate returned vasp list data.
+            validate: bool. decide whether to validate returned vasp list data.
+            is_prod: bool. decide which public key to use
 
          Returns:
             str. uncompressed public key
@@ -98,7 +106,7 @@ class API:
          Raises:
             Exception('Invalid vasp_code')
          """
-        vasps = self.get_vasp_list(validate)
+        vasps = self.get_vasp_list(validate, is_prod)
         target_vasp = None
         for _, item in enumerate(vasps):
             if item['vasp_code'] == vasp_code:
