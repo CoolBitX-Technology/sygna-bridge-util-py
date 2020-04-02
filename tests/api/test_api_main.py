@@ -11,7 +11,11 @@ from sygna_bridge_util.utils import (
 )
 from jsonschema import ValidationError
 
-from sygna_bridge_util.config import SYGNA_BRIDGE_CENTRAL_PUBKEY, HTTP_TIMEOUT
+from sygna_bridge_util.config import (
+    SYGNA_BRIDGE_CENTRAL_PUBKEY,
+    SYGNA_BRIDGE_CENTRAL_PUBKEY_TEST,
+    HTTP_TIMEOUT
+)
 
 ORIGINATOR_API_KEY = "123456789"
 BENEFICIARY_API_KEY = "0987654321"
@@ -95,7 +99,7 @@ class ApiTest(unittest.TestCase):
         assert mock_get_sb.call_count == 3
         assert mock_get_sb.call_args == call(DOMAIN + 'api/v1/bridge/vasp')
         assert mock_verify.call_count == 1
-        assert mock_verify.call_args == call(fake_vasp_list, SYGNA_BRIDGE_CENTRAL_PUBKEY)
+        assert mock_verify.call_args == call(fake_vasp_list, SYGNA_BRIDGE_CENTRAL_PUBKEY_TEST)
 
         mock_verify.return_value = True
         try:
@@ -103,6 +107,28 @@ class ApiTest(unittest.TestCase):
             assert mock_get_sb.call_count == 4
             assert mock_get_sb.call_args == call(DOMAIN + 'api/v1/bridge/vasp')
             assert mock_verify.call_count == 2
+            assert mock_verify.call_args == call(fake_vasp_list, SYGNA_BRIDGE_CENTRAL_PUBKEY_TEST)
+            assert vasp_list == fake_vasp_list['vasp_data']
+        except ValueError:
+            pytest.fail('Unexpected ValueError')
+
+        mock_verify.return_value = True
+        try:
+            vasp_list = instance.get_vasp_list(True, False)
+            assert mock_get_sb.call_count == 5
+            assert mock_get_sb.call_args == call(DOMAIN + 'api/v1/bridge/vasp')
+            assert mock_verify.call_count == 3
+            assert mock_verify.call_args == call(fake_vasp_list, SYGNA_BRIDGE_CENTRAL_PUBKEY_TEST)
+            assert vasp_list == fake_vasp_list['vasp_data']
+        except ValueError:
+            pytest.fail('Unexpected ValueError')
+
+        mock_verify.return_value = True
+        try:
+            vasp_list = instance.get_vasp_list(True, True)
+            assert mock_get_sb.call_count == 6
+            assert mock_get_sb.call_args == call(DOMAIN + 'api/v1/bridge/vasp')
+            assert mock_verify.call_count == 4
             assert mock_verify.call_args == call(fake_vasp_list, SYGNA_BRIDGE_CENTRAL_PUBKEY)
             assert vasp_list == fake_vasp_list['vasp_data']
         except ValueError:
@@ -119,7 +145,7 @@ class ApiTest(unittest.TestCase):
             instance.get_vasp_public_key(vasp_code)
         assert 'get_vasp_list raise exception' == str(exception.value)
         assert mock_get_vasp_list.call_count == 1
-        assert mock_get_vasp_list.call_args == call(True)
+        assert mock_get_vasp_list.call_args == call(True, False)
 
         mock_get_vasp_list.side_effect = None
         fake_vasp_list = [
@@ -144,14 +170,30 @@ class ApiTest(unittest.TestCase):
             instance.get_vasp_public_key(vasp_code, False)
         assert 'Invalid vasp_code' == str(exception.value)
         assert mock_get_vasp_list.call_count == 2
-        assert mock_get_vasp_list.call_args == call(False)
+        assert mock_get_vasp_list.call_args == call(False, False)
+
+        vasp_code = 'VASPJPJT4'
+        with pytest.raises(ValueError) as exception:
+            instance.get_vasp_public_key(vasp_code, False, False)
+        assert 'Invalid vasp_code' == str(exception.value)
+        assert mock_get_vasp_list.call_count == 3
+        assert mock_get_vasp_list.call_args == call(False, False)
 
         vasp_code = 'ABCDKRZZ111'
         try:
             vasp_public_key = instance.get_vasp_public_key(vasp_code, True)
             assert vasp_public_key == fake_vasp_list[1]['vasp_pubkey']
-            assert mock_get_vasp_list.call_count == 3
-            assert mock_get_vasp_list.call_args == call(True)
+            assert mock_get_vasp_list.call_count == 4
+            assert mock_get_vasp_list.call_args == call(True, False)
+        except ValueError:
+            pytest.fail('Unexpected ValueError')
+
+        vasp_code = 'ABCDKRZZ111'
+        try:
+            vasp_public_key = instance.get_vasp_public_key(vasp_code, True, True)
+            assert vasp_public_key == fake_vasp_list[1]['vasp_pubkey']
+            assert mock_get_vasp_list.call_count == 5
+            assert mock_get_vasp_list.call_args == call(True, True)
         except ValueError:
             pytest.fail('Unexpected ValueError')
 
