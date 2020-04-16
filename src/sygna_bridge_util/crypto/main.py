@@ -6,13 +6,15 @@ from sygna_bridge_util.validator import (
     validate_permission_request_schema,
     validate_transaction_id_schema,
     validate_callback_schema,
-    validate_private_key
+    validate_private_key,
+    validate_beneficiary_endpoint_url_schema
 )
 from sygna_bridge_util.utils import (
     sort_permission_request_data,
     sort_permission_data,
     sort_callback_data,
-    sort_transaction_id_data
+    sort_transaction_id_data,
+    sort_beneficiary_endpoint_url_data
 )
 
 
@@ -189,3 +191,31 @@ def sign_transaction_id(data: dict, private_key: str) -> dict:
 
     sorted_transaction_id_data = sort_transaction_id_data(data)
     return sign_data(sorted_transaction_id_data, private_key)
+
+
+def sign_beneficiary_endpoint_url(data: dict, private_key: str) -> dict:
+    """ sign sign_beneficiary_endpoint_url data
+
+    Args:
+        data: dict{
+            vasp_code: str
+            beneficiary_endpoint_url: str
+        }
+        private_key: str
+
+    Returns:
+        dict{
+            vasp_code: str
+            beneficiary_endpoint_url: str,
+            signature: str
+        }
+
+    Raises:
+        ValidationError
+    """
+
+    validate_beneficiary_endpoint_url_schema(data)
+    validate_private_key(private_key)
+
+    sorted_beneficiary_endpoint_url_data = sort_beneficiary_endpoint_url_data(data)
+    return sign_data(sorted_beneficiary_endpoint_url_data, private_key)
