@@ -21,7 +21,7 @@ def get_requirements():
 
 setup(
     name='sygna-bridge-util',
-    version='0.0.10',
+    version='0.0.11',
     packages=find_packages("src"),
     package_dir={"": "src"},
     install_requires=get_requirements(),
