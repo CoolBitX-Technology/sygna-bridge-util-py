@@ -10,12 +10,14 @@ from sygna_bridge_util.validator import (
     validate_transfer_id,
     validate_post_permission_schema,
     validate_post_permission_request_schema,
-    validate_post_transaction_id_schema
+    validate_post_transaction_id_schema,
+    validate_post_beneficiary_endpoint_url_schema
 )
 from sygna_bridge_util.utils import (
     sort_post_transaction_id_data,
     sort_post_permission_request_data,
-    sort_post_permission_data
+    sort_post_permission_data,
+    sort_post_beneficiary_endpoint_url_data
 )
 
 
@@ -247,3 +249,27 @@ class API:
         sorted_post_transaction_id_data = sort_post_transaction_id_data(data)
         url = self.domain + 'api/v1/bridge/transaction/txid'
         return self.post_sb(url, sorted_post_transaction_id_data)
+
+    def post_beneficiary_endpoint_url(self, data: dict) -> dict:
+        """revise beneficiary endpoint url
+
+         Args:
+            data: dict{
+                vasp_code: str
+                beneficiary_endpoint_url: str
+                signature: str
+            }
+
+         Returns:
+            dict{
+                status: str
+            }
+
+         Raises:
+            ValidationError
+         """
+        validate_post_beneficiary_endpoint_url_schema(data)
+
+        sorted_post_beneficiary_endpoint_url_data = sort_post_beneficiary_endpoint_url_data(data)
+        url = self.domain + 'api/v1/bridge/transaction/beneficiary-endpoint-url'
+        return self.post_sb(url, sorted_post_beneficiary_endpoint_url_data)

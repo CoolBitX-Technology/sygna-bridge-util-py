@@ -7,7 +7,8 @@ from sygna_bridge_util.api import main, API
 from sygna_bridge_util.utils import (
     sort_post_permission_data,
     sort_post_permission_request_data,
-    sort_post_transaction_id_data
+    sort_post_transaction_id_data,
+    sort_post_beneficiary_endpoint_url_data
 )
 from jsonschema import ValidationError
 
@@ -327,7 +328,7 @@ class ApiTest(unittest.TestCase):
                     'beneficiary_addrs_extra': {'DT': '002'},
                     'transaction_currency': '0x80000000',
                 },
-                'signature':'12345',
+                'signature': '12345',
                 'private_info': '12345',
             }
         }
@@ -383,6 +384,43 @@ class ApiTest(unittest.TestCase):
             assert mock_post_sb.call_count == 1
             assert mock_post_sb.call_args == call(DOMAIN + 'api/v1/bridge/transaction/txid',
                                                   sorted_post_transaction_id_data)
+        except ValidationError:
+            pytest.fail('Unexpected ValidationError')
+
+    @patch.object(API, 'post_sb')
+    @patch.object(main, 'validate_post_beneficiary_endpoint_url_schema')
+    def test_post_beneficiary_endpoint_url(self, mock_validate_post_beneficiary_endpoint_url_schema, mock_post_sb):
+        instance = API(ORIGINATOR_API_KEY, DOMAIN)
+
+        mock_validate_post_beneficiary_endpoint_url_schema.side_effect = ValidationError(
+            'validate_post_beneficiary_endpoint_url_schema raise exception')
+
+        post_beneficiary_endpoint_url_data = {
+            'signature': 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1'
+                         'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af',
+            'beneficiary_endpoint_url': 'https://www.youtube.com/',
+            'vasp_code': 'TESTTWTP98'
+        }
+        with pytest.raises(ValidationError) as exception:
+            instance.post_beneficiary_endpoint_url(post_beneficiary_endpoint_url_data)
+        assert 'validate_post_beneficiary_endpoint_url_schema raise exception' == str(exception.value)
+        assert mock_validate_post_beneficiary_endpoint_url_schema.call_count == 1
+        assert mock_validate_post_beneficiary_endpoint_url_schema.call_args == call(post_beneficiary_endpoint_url_data)
+
+        mock_validate_post_beneficiary_endpoint_url_schema.side_effect = None
+        fake_post_beneficiary_endpoint_url_response = {"status": "ok"}
+        mock_post_sb.return_value = fake_post_beneficiary_endpoint_url_response
+        sorted_post_beneficiary_endpoint_url_data = sort_post_beneficiary_endpoint_url_data(
+            post_beneficiary_endpoint_url_data)
+        try:
+            response = instance.post_beneficiary_endpoint_url(post_beneficiary_endpoint_url_data)
+            assert response == fake_post_beneficiary_endpoint_url_response
+            assert mock_validate_post_beneficiary_endpoint_url_schema.call_count == 2
+            assert mock_validate_post_beneficiary_endpoint_url_schema.call_args == call(
+                post_beneficiary_endpoint_url_data)
+            assert mock_post_sb.call_count == 1
+            assert mock_post_sb.call_args == call(DOMAIN + 'api/v1/bridge/transaction/beneficiary-endpoint-url',
+                                                  sorted_post_beneficiary_endpoint_url_data)
         except ValidationError:
             pytest.fail('Unexpected ValidationError')
 
