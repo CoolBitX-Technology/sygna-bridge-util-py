@@ -290,3 +290,47 @@ def sort_post_transaction_id_data(post_transaction_id_data: dict) -> dict:
     sorted_post_transaction_id_data = sort_transaction_id_data(post_transaction_id_data)
     sorted_post_transaction_id_data['signature'] = post_transaction_id_data['signature']
     return sorted_post_transaction_id_data
+
+
+def sort_beneficiary_endpoint_url_data(beneficiary_endpoint_url_data: dict) -> dict:
+    """sort beneficiary_endpoint_url_data
+
+     Args:
+        beneficiary_endpoint_url_data : dict{
+            vasp_code: str
+            beneficiary_endpoint_url: str
+        }
+
+     Returns:
+        sorted dict{
+            vasp_code: str
+            beneficiary_endpoint_url: str
+        }
+     """
+    sorted_beneficiary_endpoint_url_data = {
+        'vasp_code': beneficiary_endpoint_url_data['vasp_code'],
+        'beneficiary_endpoint_url': beneficiary_endpoint_url_data['beneficiary_endpoint_url']
+    }
+    return sorted_beneficiary_endpoint_url_data
+
+
+def sort_post_beneficiary_endpoint_url_data(post_beneficiary_endpoint_url_data: dict) -> dict:
+    """sort post_beneficiary_endpoint_url_data
+
+     Args:
+        post_beneficiary_endpoint_url_data : dict{
+            vasp_code: str
+            beneficiary_endpoint_url: str
+            signature: str
+        }
+
+     Returns:
+        sorted dict{
+            vasp_code: str
+            beneficiary_endpoint_url: str
+            signature:str
+        }
+     """
+    sorted_post_beneficiary_endpoint_url_data = sort_beneficiary_endpoint_url_data(post_beneficiary_endpoint_url_data)
+    sorted_post_beneficiary_endpoint_url_data['signature'] = post_beneficiary_endpoint_url_data['signature']
+    return sorted_post_beneficiary_endpoint_url_data
