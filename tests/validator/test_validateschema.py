@@ -11,7 +11,9 @@ from sygna_bridge_util.validator import (
     validate_callback_schema,
     validate_post_permission_schema,
     validate_post_permission_request_schema,
-    validate_post_transaction_id_schema
+    validate_post_transaction_id_schema,
+    validate_beneficiary_endpoint_url_schema,
+    validate_post_beneficiary_endpoint_url_schema
 )
 from sygna_bridge_util.schemas import (
     get_permission_request_schema,
@@ -20,7 +22,9 @@ from sygna_bridge_util.schemas import (
     get_callback_schema,
     get_post_permission_schema,
     get_post_permission_request_schema,
-    get_post_txid_schema
+    get_post_txid_schema,
+    get_beneficiary_endpoint_url_schema,
+    get_post_beneficiary_endpoint_url_schema
 )
 
 
@@ -155,6 +159,20 @@ class ValidateSchemaTest(unittest.TestCase):
         validate_post_transaction_id_schema(data)
         assert mock_validate_schema.call_count == 1
         assert mock_validate_schema.call_args == call(data, get_post_txid_schema())
+
+    @patch.object(validateschema, 'validate_schema')
+    def test_validate_beneficiary_endpoint_url_schema(self, mock_validate_schema):
+        data = {"key": "value"}
+        validate_beneficiary_endpoint_url_schema(data)
+        assert mock_validate_schema.call_count == 1
+        assert mock_validate_schema.call_args == call(data, get_beneficiary_endpoint_url_schema())
+
+    @patch.object(validateschema, 'validate_schema')
+    def validate_post_beneficiary_endpoint_url_schema(self, mock_validate_schema):
+        data = {"key": "value"}
+        validate_post_beneficiary_endpoint_url_schema(data)
+        assert mock_validate_schema.call_count == 1
+        assert mock_validate_schema.call_args == call(data, get_post_beneficiary_endpoint_url_schema())
 
 
 if __name__ == '__main__':
