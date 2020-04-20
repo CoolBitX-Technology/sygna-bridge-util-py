@@ -13,7 +13,10 @@ def read(*args):
 def get_requirements():
     """Reads the requirements file."""
     requirements = read("requirements.txt")
-    return list(requirements.strip().splitlines())
+    requirements_list = list(requirements.strip().splitlines())
+    if '-i https://pypi.org/simple' in requirements_list:
+        requirements_list.remove('-i https://pypi.org/simple')
+    return requirements_list
 
 
 setup(
