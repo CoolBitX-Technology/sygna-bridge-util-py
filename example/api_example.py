@@ -91,12 +91,12 @@ def post_transaction_id():
 
 def post_beneficiary_endpoint_url():
     post_beneficiary_endpoint_url_data = {
-        'signature': 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1'
-                     'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af',
-        'beneficiary_endpoint_url': 'https://www.youtube.com/',
-        'vasp_code': 'TESTTWTP98'
+        'signature': '01c2368f67a1bc572b3fcd535324f55ded4e28d5f12c1f2f43fe8a68521'
+                     '4906b4205046d90bb798d1b59d9edecda71c87980b66f381dc0684f73585bc03307ef',
+        'beneficiary_endpoint_url':  'https://www.youtube.com',
+        'vasp_code': 'VASPUSNY1'
     }
-    instance = API(ORIGINATOR_API_KEY, DOMAIN)
+    instance = API(BENEFICIARY_API_KEY, DOMAIN)
     post_beneficiary_endpoint_url_result = instance.post_beneficiary_endpoint_url(post_beneficiary_endpoint_url_data)
     print(f'post_beneficiary_endpoint_url_result = {post_beneficiary_endpoint_url_result}')
 
@@ -108,4 +108,4 @@ if __name__ == '__main__':
     # post_permission()
     # post_permission_request()
     # post_transaction_id()
-    # post_beneficiary_endpoint_url
+    # post_beneficiary_endpoint_url()

@@ -419,7 +419,7 @@ class ApiTest(unittest.TestCase):
             assert mock_validate_post_beneficiary_endpoint_url_schema.call_args == call(
                 post_beneficiary_endpoint_url_data)
             assert mock_post_sb.call_count == 1
-            assert mock_post_sb.call_args == call(DOMAIN + 'api/v1/bridge/transaction/beneficiary-endpoint-url',
+            assert mock_post_sb.call_args == call(DOMAIN + 'api/v1/bridge/vasp/beneficiary-endpoint-url',
                                                   sorted_post_beneficiary_endpoint_url_data)
         except ValidationError:
             pytest.fail('Unexpected ValidationError')

@@ -271,5 +271,5 @@ class API:
         validate_post_beneficiary_endpoint_url_schema(data)
 
         sorted_post_beneficiary_endpoint_url_data = sort_post_beneficiary_endpoint_url_data(data)
-        url = self.domain + 'api/v1/bridge/transaction/beneficiary-endpoint-url'
+        url = self.domain + 'api/v1/bridge/vasp/beneficiary-endpoint-url'
         return self.post_sb(url, sorted_post_beneficiary_endpoint_url_data)
