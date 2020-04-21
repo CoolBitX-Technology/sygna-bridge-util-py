@@ -10,7 +10,8 @@ from sygna_bridge_util.crypto import (
     sign_permission_request,
     sign_callback,
     sign_permission,
-    sign_transaction_id
+    sign_transaction_id,
+    sign_beneficiary_endpoint_url
 )
 from sygna_bridge_util.crypto import main
 from .fake_data import FAKE_PRIVATE_KEY, FAKE_PUBLIC_KEY
@@ -206,7 +207,7 @@ class CryptoTest(unittest.TestCase):
     def test_sign_callback(self, mock_validate_callback_schema, mock_validate_private_key, mock_sign_data):
         mock_validate_callback_schema.side_effect = Exception('validate_callback_schema raise exception')
         fake_data = {
-            'callback_url': 'http://google.com'
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
         }
         with pytest.raises(Exception) as exception:
             sign_callback(fake_data, FAKE_PRIVATE_KEY)
@@ -387,6 +388,54 @@ class CryptoTest(unittest.TestCase):
         data_to_sign = {
             'transfer_id': fake_data['transfer_id'],
             'txid': fake_data['txid']
+        }
+        assert mock_sign_data.call_args == call(data_to_sign, FAKE_PRIVATE_KEY)
+        assert result == fake_result
+
+    @patch.object(main, 'sign_data')
+    @patch.object(main, 'validate_private_key')
+    @patch.object(main, 'validate_beneficiary_endpoint_url_schema')
+    def test_sign_beneficiary_endpoint_url(self, mock_validate_beneficiary_endpoint_url_schema_schema, mock_validate_private_key,
+                                 mock_sign_data):
+        mock_validate_beneficiary_endpoint_url_schema_schema.side_effect = Exception(
+            'validate_beneficiary_endpoint_url_schema raise exception')
+        fake_data = {
+            'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+            'vasp_code': 'VASPUSNY1'
+        }
+        with pytest.raises(Exception) as exception:
+            sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
+        assert 'validate_beneficiary_endpoint_url_schema raise exception' == str(exception.value)
+        assert mock_validate_beneficiary_endpoint_url_schema_schema.call_count == 1
+        assert mock_validate_beneficiary_endpoint_url_schema_schema.call_args == call(fake_data)
+        assert mock_validate_private_key.call_count == 0
+        assert mock_sign_data.call_count == 0
+
+        mock_validate_beneficiary_endpoint_url_schema_schema.side_effect = None
+        mock_validate_private_key.side_effect = Exception('validate_private_key raise exception')
+        with pytest.raises(Exception) as exception:
+            sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
+        assert 'validate_private_key raise exception' == str(exception.value)
+        assert mock_validate_beneficiary_endpoint_url_schema_schema.call_count == 2
+        assert mock_validate_beneficiary_endpoint_url_schema_schema.call_args == call(fake_data)
+        assert mock_validate_private_key.call_count == 1
+        assert mock_validate_private_key.call_args == call(FAKE_PRIVATE_KEY)
+        assert mock_sign_data.call_count == 0
+
+        mock_validate_private_key.side_effect = None
+        fake_result = copy.deepcopy(fake_data)
+        fake_result['signature'] = 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1' \
+                                   'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af'
+        mock_sign_data.return_value = fake_result
+        result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
+        assert mock_validate_beneficiary_endpoint_url_schema_schema.call_count == 3
+        assert mock_validate_beneficiary_endpoint_url_schema_schema.call_args == call(fake_data)
+        assert mock_validate_private_key.call_count == 2
+        assert mock_validate_private_key.call_args == call(FAKE_PRIVATE_KEY)
+        assert mock_sign_data.call_count == 1
+        data_to_sign = {
+            'vasp_code': fake_data['vasp_code'],
+            'beneficiary_endpoint_url': fake_data['beneficiary_endpoint_url']
         }
         assert mock_sign_data.call_args == call(data_to_sign, FAKE_PRIVATE_KEY)
         assert result == fake_result

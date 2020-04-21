@@ -5,7 +5,8 @@ from .main import (
     sign_permission_request,
     sign_callback,
     sign_permission,
-    sign_transaction_id
+    sign_transaction_id,
+    sign_beneficiary_endpoint_url
 )
 
 from .sign import sign_message
@@ -21,5 +22,6 @@ __all__ = [
     'sign_transaction_id',
     'sign_message',
     'verify_data',
-    'verify_message'
+    'verify_message',
+    'sign_beneficiary_endpoint_url'
 ]

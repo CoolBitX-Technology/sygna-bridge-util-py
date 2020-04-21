@@ -6,7 +6,9 @@ from sygna_bridge_util.schemas import (
     get_callback_schema,
     get_post_permission_schema,
     get_post_permission_request_schema,
-    get_post_txid_schema
+    get_post_txid_schema,
+    get_beneficiary_endpoint_url_schema,
+    get_post_beneficiary_endpoint_url_schema
 )
 from .validatedata import validate_expire_date
 
@@ -49,3 +51,11 @@ def validate_post_permission_request_schema(data: dict) -> None:
 
 def validate_post_transaction_id_schema(data: dict) -> None:
     validate_schema(data, get_post_txid_schema())
+
+
+def validate_beneficiary_endpoint_url_schema(data: dict) -> None:
+    validate_schema(data, get_beneficiary_endpoint_url_schema())
+
+
+def validate_post_beneficiary_endpoint_url_schema(data: dict) -> None:
+    validate_schema(data, get_post_beneficiary_endpoint_url_schema())

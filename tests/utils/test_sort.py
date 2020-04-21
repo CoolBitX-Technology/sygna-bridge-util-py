@@ -7,7 +7,9 @@ from sygna_bridge_util.utils import (
     sort_permission_request_data,
     sort_post_permission_data,
     sort_post_permission_request_data,
-    sort_post_transaction_id_data
+    sort_post_transaction_id_data,
+    sort_beneficiary_endpoint_url_data,
+    sort_post_beneficiary_endpoint_url_data
 )
 
 
@@ -38,15 +40,15 @@ def test_sort_transaction_id_data():
 
 def test_sort_callback_data():
     callback_data = {
-        'callback_url': 'https://google.com'
+        'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
     }
     expected_sorted_dict_str = json.dumps({
-        'callback_url': 'https://google.com'
+        'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
     })
     assert json.dumps(sort_callback_data(callback_data)) == expected_sorted_dict_str
 
     callback_data = {
-        'callback_url': 'https://google.com',
+        'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
         'key': 'value'
     }
     assert json.dumps(sort_callback_data(callback_data)) == expected_sorted_dict_str
@@ -479,7 +481,7 @@ def test_sort_post_permission_request_data():
     post_permission_request_data = {
         'callback': {
             'signature': '1234567890',
-            'callback_url': 'https://google.com'
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
         },
         'data': {
             'signature': '1234567890',
@@ -523,7 +525,7 @@ def test_sort_post_permission_request_data():
     post_permission_request_data = {
         'callback': {
             'signature': '1234567890',
-            'callback_url': 'https://google.com'
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
         },
         'data': {
             'data_dt': '2019-07-29T06:29:00.123Z',
@@ -568,7 +570,7 @@ def test_sort_post_permission_request_data():
 
     post_permission_request_data = {
         'callback': {
-            'callback_url': 'https://google.com',
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
             'signature': '1234567890'
         },
         'data': {
@@ -600,7 +602,8 @@ def test_sort_post_permission_request_data():
                 'originator_addrs_extra': post_permission_request_data['data']['transaction']['originator_addrs_extra'],
                 'beneficiary_vasp_code': post_permission_request_data['data']['transaction']['beneficiary_vasp_code'],
                 'beneficiary_addrs': post_permission_request_data['data']['transaction']['beneficiary_addrs'],
-                'beneficiary_addrs_extra': post_permission_request_data['data']['transaction']['beneficiary_addrs_extra'],
+                'beneficiary_addrs_extra': post_permission_request_data['data']['transaction'][
+                    'beneficiary_addrs_extra'],
                 'transaction_currency': post_permission_request_data['data']['transaction']['transaction_currency'],
                 'amount': post_permission_request_data['data']['transaction']['amount']
             },
@@ -616,7 +619,7 @@ def test_sort_post_permission_request_data():
 
     post_permission_request_data = {
         'callback': {
-            'callback_url': 'https://google.com',
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
             'signature': '1234567890'
         },
         'data': {
@@ -649,12 +652,13 @@ def test_sort_post_permission_request_data():
                 'originator_addrs_extra': post_permission_request_data['data']['transaction']['originator_addrs_extra'],
                 'beneficiary_vasp_code': post_permission_request_data['data']['transaction']['beneficiary_vasp_code'],
                 'beneficiary_addrs': post_permission_request_data['data']['transaction']['beneficiary_addrs'],
-                'beneficiary_addrs_extra': post_permission_request_data['data']['transaction']['beneficiary_addrs_extra'],
+                'beneficiary_addrs_extra': post_permission_request_data['data']['transaction'][
+                    'beneficiary_addrs_extra'],
                 'transaction_currency': post_permission_request_data['data']['transaction']['transaction_currency'],
                 'amount': post_permission_request_data['data']['transaction']['amount']
             },
             'data_dt': post_permission_request_data['data']['data_dt'],
-            'expire_date':post_permission_request_data['data']['expire_date'],
+            'expire_date': post_permission_request_data['data']['expire_date'],
             'signature': post_permission_request_data['data']['signature']
         },
         'callback': {
@@ -665,6 +669,33 @@ def test_sort_post_permission_request_data():
     assert json.dumps(sort_post_permission_request_data(post_permission_request_data)) == expected_sorted_dict_str
 
 
+def test_sort_beneficiary_endpoint_url_data():
+    beneficiary_endpoint_url_data = {
+        'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+        'vasp_code': 'VASPTWTP1'
+    }
+    expected_sorted_dict_str = json.dumps({
+        'vasp_code': beneficiary_endpoint_url_data['vasp_code'],
+        'beneficiary_endpoint_url': beneficiary_endpoint_url_data['beneficiary_endpoint_url']
+    })
+    assert json.dumps(sort_beneficiary_endpoint_url_data(beneficiary_endpoint_url_data)) == expected_sorted_dict_str
+
+
+def test_sort_post_beneficiary_endpoint_url_data():
+    post_beneficiary_endpoint_url_data = {
+        'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+        'signature': '1234567890',
+        'vasp_code': 'VASPTWTP1'
+    }
+    expected_sorted_dict_str = json.dumps({
+        'vasp_code': post_beneficiary_endpoint_url_data['vasp_code'],
+        'beneficiary_endpoint_url': post_beneficiary_endpoint_url_data['beneficiary_endpoint_url'],
+        'signature': post_beneficiary_endpoint_url_data['signature'],
+    })
+    assert json.dumps(
+        sort_post_beneficiary_endpoint_url_data(post_beneficiary_endpoint_url_data)) == expected_sorted_dict_str
+
+
 if __name__ == '__main__':
     test_sort_transaction_id_data()
     test_sort_callback_data()
@@ -672,3 +703,5 @@ if __name__ == '__main__':
     test_sort_permission_request_data()
     test_sort_post_transaction_id_data()
     test_sort_post_permission_request_data()
+    test_sort_beneficiary_endpoint_url_data()
+    test_sort_post_beneficiary_endpoint_url_data()

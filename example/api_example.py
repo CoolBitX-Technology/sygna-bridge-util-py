@@ -29,10 +29,10 @@ def get_vasp_public_key():
 
 def post_permission():
     permission_data = {
-        'transfer_id': '9e28be67422352c4cdbd954f23765672e63b2b47e6746c1dcae1e5542e2ed631',
+        'transfer_id': '7ee09be947adfa9cca16effe0fdf6fb719efecced91c31f75efaa4f17c011eed',
         'permission_status': 'ACCEPTED',
-        'signature': '1cf7779782e9f8d8de21b590069b34c6cdc322ed52f3586d90638a9ef605418962d'
-                     'e9f414eed610610fc58498af1c23e5f8d3a623903a671754f260984bfeda2'
+        'signature': '0b03217c58d167529a850978f7fad329210c58703c18d1686bb819c88f41b12d7c0'
+                     '78de678b451e0aed9de21b5b71aac9e0ce399ba0ca18a9bd002ac6235e5b8'
     }
     instance = API(BENEFICIARY_API_KEY, DOMAIN)
     post_permission_result = instance.post_permission(permission_data)
@@ -59,17 +59,17 @@ def post_permission_request():
                         '3F4ReDwiMLu8LrAiXwwD2DhH8U9xMrUzUf'
                     ],
                     'transaction_currency': '0x80000000',
-                    'amount': 1
+                    'amount': 1.2
                 },
                 'data_dt': '2019-07-29T06:29:00.123Z',
-                'signature': 'c800add1fdd30c50a7dafa156e3cb15623d5675d81b20d05e4d0c069ef284e5b724687'
-                             '41e3a758a8ab92e54b879ebda1b4959d980734526ee0df0592debcc49a'
+                'signature': '219ce35edceaec45e5815134953170f0f6b7d7deb038054ec2e978411e1d0f9954b54b'
+                             '40dbc22297157dab00ee83c4867d5cf67f169ca0091ae327c8ac5aad91'
 
             },
         'callback': {
-            'callback_url': 'http://google.com',
-            'signature': 'd50350b566c6041b5a6be19cc3266fdd5ba69f3ccd80cbe528f8e3f652dd2d177ff873421e'
-                         'a1550c5f4d9219515cc4194c822cf014fd22eef2fdec86a2c7fc72'
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+            'signature': 'a32fd8dc7e0eb143d3b4e9d590170962c59b9b4b2d927342182339bb375ce08d6b84fca5dd7a5'
+                         'd952332c78c45a2377d026dae0279871fb1847ad68acc61c155'
         }
     }
     instance = API(ORIGINATOR_API_KEY, DOMAIN)
@@ -79,14 +79,26 @@ def post_permission_request():
 
 def post_transaction_id():
     post_transaction_id_data = {
-        'transfer_id': '9e28be67422352c4cdbd954f23765672e63b2b47e6746c1dcae1e5542e2ed631',
+        'transfer_id': '7ee09be947adfa9cca16effe0fdf6fb719efecced91c31f75efaa4f17c011eed',
         'txid': '12345678',
-        'signature': 'c59d44e020ff2a804ecd6285bb38345166e32346b6102b27cab9670cdeaa9c5f1cd'
-                     'df40c21751416d625645d5d5302b0e56992ab64fa48b0db3cd9e1c1d91ca9'
+        'signature': 'e4c5d3d46a87e0c39cb64c3da47558bc92123e3dc30206ebd797c526326139894b'
+                     'c8264831f580421123006218a45b7530fcaa89ed35aafd1f18d9c00afe808d'
     }
     instance = API(ORIGINATOR_API_KEY, DOMAIN)
     post_transaction_id_result = instance.post_transaction_id(post_transaction_id_data)
     print(f'post_transaction_id_result = {post_transaction_id_result}')
+
+
+def post_beneficiary_endpoint_url():
+    post_beneficiary_endpoint_url_data = {
+        'signature': '4b97136c369d40d05af5c381c6cfa2a5118c56c375caff6dc5cdca0bba2c0be739'
+                     '1b398d94473e4b11aec50860b10f593202d1dc3af279fa1814e7174184c476',
+        'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+        'vasp_code': 'VASPUSNY1'
+    }
+    instance = API(BENEFICIARY_API_KEY, DOMAIN)
+    post_beneficiary_endpoint_url_result = instance.post_beneficiary_endpoint_url(post_beneficiary_endpoint_url_data)
+    print(f'post_beneficiary_endpoint_url_result = {post_beneficiary_endpoint_url_result}')
 
 
 if __name__ == '__main__':
@@ -96,3 +108,4 @@ if __name__ == '__main__':
     # post_permission()
     # post_permission_request()
     # post_transaction_id()
+    # post_beneficiary_endpoint_url()
