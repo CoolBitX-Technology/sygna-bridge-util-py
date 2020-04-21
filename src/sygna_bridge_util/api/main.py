@@ -76,7 +76,7 @@ class API:
             Exception('Request VASPs failed')
             Exception('get VASP info error: invalid signature')
          """
-        url = self.domain + 'api/v1/bridge/vasp'
+        url = self.domain + 'api/v1.1.0/bridge/vasp'
         result = self.get_sb(url)
         if 'vasp_data' not in result:
             raise ValueError(
@@ -154,7 +154,7 @@ class API:
             }
          """
         validate_transfer_id(transfer_id)
-        url = self.domain + 'api/v1/bridge/transaction/status?transfer_id=' + transfer_id
+        url = self.domain + 'api/v1.1.0/bridge/transaction/status?transfer_id=' + transfer_id
         return self.get_sb(url)
 
     def post_permission(self, data: dict) -> dict:
@@ -182,7 +182,7 @@ class API:
         validate_post_permission_schema(data)
 
         sorted_post_permission_data = sort_post_permission_data(data)
-        url = self.domain + 'api/v1/bridge/transaction/permission'
+        url = self.domain + 'api/v1.1.0/bridge/transaction/permission'
         return self.post_sb(url, sorted_post_permission_data)
 
     def post_permission_request(self, data: dict) -> dict:
@@ -223,7 +223,7 @@ class API:
         validate_post_permission_request_schema(data)
 
         sorted_post_permission_request_data = sort_post_permission_request_data(data)
-        url = self.domain + 'api/v1/bridge/transaction/permission-request'
+        url = self.domain + 'api/v1.1.0/bridge/transaction/permission-request'
         return self.post_sb(url, sorted_post_permission_request_data)
 
     def post_transaction_id(self, data: dict) -> dict:
@@ -247,7 +247,7 @@ class API:
         validate_post_transaction_id_schema(data)
 
         sorted_post_transaction_id_data = sort_post_transaction_id_data(data)
-        url = self.domain + 'api/v1/bridge/transaction/txid'
+        url = self.domain + 'api/v1.1.0/bridge/transaction/txid'
         return self.post_sb(url, sorted_post_transaction_id_data)
 
     def post_beneficiary_endpoint_url(self, data: dict) -> dict:
@@ -271,5 +271,5 @@ class API:
         validate_post_beneficiary_endpoint_url_schema(data)
 
         sorted_post_beneficiary_endpoint_url_data = sort_post_beneficiary_endpoint_url_data(data)
-        url = self.domain + 'api/v1/bridge/vasp/beneficiary-endpoint-url'
+        url = self.domain + 'api/v1.1.0/bridge/vasp/beneficiary-endpoint-url'
         return self.post_sb(url, sorted_post_beneficiary_endpoint_url_data)
