@@ -207,7 +207,7 @@ class CryptoTest(unittest.TestCase):
     def test_sign_callback(self, mock_validate_callback_schema, mock_validate_private_key, mock_sign_data):
         mock_validate_callback_schema.side_effect = Exception('validate_callback_schema raise exception')
         fake_data = {
-            'callback_url': 'http://google.com'
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
         }
         with pytest.raises(Exception) as exception:
             sign_callback(fake_data, FAKE_PRIVATE_KEY)
@@ -400,8 +400,8 @@ class CryptoTest(unittest.TestCase):
         mock_validate_beneficiary_endpoint_url_schema_schema.side_effect = Exception(
             'validate_beneficiary_endpoint_url_schema raise exception')
         fake_data = {
-            'beneficiary_endpoint_url': 'https://www.youtube.com/',
-            'vasp_code': 'TESTTWTP98'
+            'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+            'vasp_code': 'VASPUSNY1'
         }
         with pytest.raises(Exception) as exception:
             sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)

@@ -216,7 +216,7 @@ def test_validate_post_permission_request_schema():
     data['callback']['callback_url'] = '123456'
     assert_validate_result(data, "'{0}' is not a 'uri'".format(data['callback']['callback_url']))
 
-    data['callback']['callback_url'] = 'http://google.com'
+    data['callback']['callback_url'] = 'https://api.sygna.io/api/v1.1.0/bridge/'
     assert_validate_result(data, "{0} is not of type 'string'".format(data['callback']['signature']))
 
     data['callback']['signature'] = '123'
@@ -359,7 +359,7 @@ def test_validate_post_permission_request_schema_success():
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             },
             'callback': {
-                'callback_url': 'http://google.com',
+                'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             }
@@ -387,7 +387,7 @@ def test_validate_post_permission_request_schema_success():
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             },
             'callback': {
-                'callback_url': 'http://google.com',
+                'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             }
@@ -415,7 +415,7 @@ def test_validate_post_permission_request_schema_success():
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             },
             'callback': {
-                'callback_url': 'http://google.com',
+                'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             }
@@ -444,7 +444,7 @@ def test_validate_post_permission_request_schema_success():
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             },
             'callback': {
-                'callback_url': 'http://google.com',
+                'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             }
@@ -472,7 +472,7 @@ def test_validate_post_permission_request_schema_success():
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             },
             'callback': {
-                'callback_url': 'http://google.com',
+                'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             }
@@ -501,7 +501,7 @@ def test_validate_post_permission_request_schema_success():
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             },
             'callback': {
-                'callback_url': 'http://google.com',
+                'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             }
@@ -530,7 +530,7 @@ def test_validate_post_permission_request_schema_success():
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             },
             'callback': {
-                'callback_url': 'http://google.com',
+                'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             }
@@ -560,7 +560,7 @@ def test_validate_post_permission_request_schema_success():
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             },
             'callback': {
-                'callback_url': 'http://google.com',
+                'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
                              'db7875b4b6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
             }

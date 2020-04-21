@@ -40,15 +40,15 @@ def test_sort_transaction_id_data():
 
 def test_sort_callback_data():
     callback_data = {
-        'callback_url': 'https://google.com'
+        'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
     }
     expected_sorted_dict_str = json.dumps({
-        'callback_url': 'https://google.com'
+        'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
     })
     assert json.dumps(sort_callback_data(callback_data)) == expected_sorted_dict_str
 
     callback_data = {
-        'callback_url': 'https://google.com',
+        'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
         'key': 'value'
     }
     assert json.dumps(sort_callback_data(callback_data)) == expected_sorted_dict_str
@@ -481,7 +481,7 @@ def test_sort_post_permission_request_data():
     post_permission_request_data = {
         'callback': {
             'signature': '1234567890',
-            'callback_url': 'https://google.com'
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
         },
         'data': {
             'signature': '1234567890',
@@ -525,7 +525,7 @@ def test_sort_post_permission_request_data():
     post_permission_request_data = {
         'callback': {
             'signature': '1234567890',
-            'callback_url': 'https://google.com'
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
         },
         'data': {
             'data_dt': '2019-07-29T06:29:00.123Z',
@@ -570,7 +570,7 @@ def test_sort_post_permission_request_data():
 
     post_permission_request_data = {
         'callback': {
-            'callback_url': 'https://google.com',
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
             'signature': '1234567890'
         },
         'data': {
@@ -619,7 +619,7 @@ def test_sort_post_permission_request_data():
 
     post_permission_request_data = {
         'callback': {
-            'callback_url': 'https://google.com',
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
             'signature': '1234567890'
         },
         'data': {
@@ -671,7 +671,7 @@ def test_sort_post_permission_request_data():
 
 def test_sort_beneficiary_endpoint_url_data():
     beneficiary_endpoint_url_data = {
-        'beneficiary_endpoint_url': 'https://google.com',
+        'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
         'vasp_code': 'VASPTWTP1'
     }
     expected_sorted_dict_str = json.dumps({
@@ -683,7 +683,7 @@ def test_sort_beneficiary_endpoint_url_data():
 
 def test_sort_post_beneficiary_endpoint_url_data():
     post_beneficiary_endpoint_url_data = {
-        'beneficiary_endpoint_url': 'https://google.com',
+        'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
         'signature': '1234567890',
         'vasp_code': 'VASPTWTP1'
     }

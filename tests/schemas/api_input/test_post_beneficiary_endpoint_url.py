@@ -57,13 +57,13 @@ def test_post_beneficiary_endpoint_url_schema():
     data['vasp_code'] = ''
     assert_validate_result(data, "'{0}' is too short".format(data['vasp_code']))
 
-    data['vasp_code'] = 'QQQQKRQQ'
+    data['vasp_code'] = 'VASPUSNY1'
     assert_validate_result(data, "{0} is not of type 'string'".format(data['beneficiary_endpoint_url']))
 
     data['beneficiary_endpoint_url'] = '123'
     assert_validate_result(data, "'{0}' is not a 'uri'".format(data['beneficiary_endpoint_url']))
 
-    data['beneficiary_endpoint_url'] = 'https://google.com'
+    data['beneficiary_endpoint_url'] = 'https://api.sygna.io/api/v1.1.0/bridge/'
     assert_validate_result(data, "{0} is not of type 'string'".format(data['signature']))
 
     data['signature'] = '123'

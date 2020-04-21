@@ -136,7 +136,7 @@ class ValidateSchemaTest(unittest.TestCase):
                     '12345'
             },
             'callback': {
-                'callback_url': 'http://google.com',
+                'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
                 'signature':
                     '12345'
             }

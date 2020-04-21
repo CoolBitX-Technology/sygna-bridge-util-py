@@ -39,7 +39,7 @@ def test_validate_callback_schema():
     data['callback_url'] = '123456'
     assert_validate_result(data, "'{0}' is not a 'uri'".format(data['callback_url']))
 
-    data['callback_url'] = 'http://google.com'
+    data['callback_url'] = 'https://api.sygna.io/api/v1.1.0/bridge/'
     try:
         validate(instance=data, schema=get_callback_schema(), format_checker=draft7_format_checker)
     except ValidationError:
@@ -50,12 +50,7 @@ def test_validate_callback_schema_success():
     """should validate success"""
     try:
         fake_data = {
-            'callback_url': 'https://google.com'
-        }
-        validate(instance=fake_data, schema=get_callback_schema(), format_checker=draft7_format_checker)
-
-        fake_data = {
-            'callback_url': 'http://google.com'
+            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
         }
         validate(instance=fake_data, schema=get_callback_schema(), format_checker=draft7_format_checker)
     except ValidationError:

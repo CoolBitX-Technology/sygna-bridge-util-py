@@ -110,11 +110,11 @@ def test_sign_permission_request():
 
 def test_sign_callback():
     fake_data = {
-        'callback_url': 'https://google.com'
+        'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
     }
     # signature from javascript util
-    expected_signature = 'db6bef6b2201f3b7d42783ba6579758ad8d0e1bad8b2b732d499758e73c185e34' \
-                         'e009f84ca68f1927c9c2ffee53bb730871a40faf555d82e28b8a211f25b213b'
+    expected_signature = '2cf2aaf91bf0056078542204a97d3462c17586f46b1e4fb63fc418a6c7f8e27f37f' \
+                         '61a85a8425774b77466c2f5042352b295aa7d584fcf70bbadaf3ebbaef2bd'
     result = sign_callback(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
@@ -186,12 +186,12 @@ def test_sign_transaction_id():
 
 def test_sign_beneficiary_endpoint_url():
     fake_data = {
-        'beneficiary_endpoint_url': 'https://www.youtube.com/',
-        'vasp_code': 'TESTTWTP98'
+        'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+        'vasp_code': 'VASPUSNY1'
     }
     # signature from javascript util
-    expected_signature = 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1' \
-                         'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af'
+    expected_signature = '72283fb8ba3ceba13bcb29e263fb283eabe4b76c9db114dfad5f9da4ef1d664077e74b1f' \
+                         '27133efb7450ef5bd4b72b35f59ee609703a74f6692e9b5ca9c4f8f5'
     result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
