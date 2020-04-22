@@ -251,7 +251,7 @@ class API:
         return self.post_sb(url, sorted_post_transaction_id_data)
 
     def post_beneficiary_endpoint_url(self, data: dict) -> dict:
-        """revise beneficiary endpoint url
+        """This allows VASP to update the Beneficiary's callback URL programmatically.
 
          Args:
             data: dict{

@@ -59,8 +59,9 @@ def test_get_post_permission_request_schema():
                                 'minLength': 1
                             },
                             'amount': {
-                                'type': 'number',
-                                'exclusiveMinimum': 0
+                                'type': 'string',
+                                'minLength': 1,
+                                'pattern': '^\\d*\\.?\\d*$'
                             }
                         },
                         'required': [
@@ -191,7 +192,7 @@ def test_validate_post_permission_request_schema():
     data['data']['transaction']['transaction_currency'] = 654
     assert_validate_result(data, "'amount' is a required property")
 
-    data['data']['transaction']['amount'] = '321'
+    data['data']['transaction']['amount'] = 321
     assert_validate_result(data, "'{0}' is not a 'date-time'".format(data['data']['data_dt']))
 
     data['data']["data_dt"] = '2016-01-12T01:24:17.130Z'
@@ -269,17 +270,16 @@ def test_validate_post_permission_request_schema():
     assert_validate_result(data, "'{0}' is too short".format(data['data']['transaction']['transaction_currency']))
 
     data['data']['transaction']['transaction_currency'] = '654'
-    assert_validate_result(data, "'{0}' is not of type 'number'".format(data['data']['transaction']['amount']))
+    assert_validate_result(data, "{0} is not of type 'string'".format(data['data']['transaction']['amount']))
 
-    data['data']['transaction']['amount'] = 0
-    assert_validate_result(data, "{0} is less than or equal to the minimum of 0".format(
+    data['data']['transaction']['amount'] = ''
+    assert_validate_result(data, "'{0}' is too short".format(
         data['data']['transaction']['amount']))
 
-    data['data']['transaction']['amount'] = -1
-    assert_validate_result(data, "{0} is less than or equal to the minimum of 0".format(
-        data['data']['transaction']['amount']))
+    data['data']['transaction']['amount'] = 'abc'
+    assert_validate_result(data, "'abc' does not match '^\\\\d*\\\\.?\\\\d*$'".format(data['data']['transaction']['amount']))
 
-    data['data']['transaction']['amount'] = 1
+    data['data']['transaction']['amount'] = '1.0'
     assert_validate_result(data,
                            "{0} is not of type 'string'".format(data['data']['transaction']['originator_addrs'][0]))
 
@@ -352,7 +352,7 @@ def test_validate_post_permission_request_schema_success():
                         '3CHgkx946yyueucCMiJhyH2Vg5kBBvfSGH'
                     ],
                     'transaction_currency': '0x80000000',
-                    'amount': 1
+                    'amount': '1'
                 },
                 'data_dt': '2019-07-29T06:29:00.123Z',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
@@ -380,7 +380,7 @@ def test_validate_post_permission_request_schema_success():
                         '3CHgkx946yyueucCMiJhyH2Vg5kBBvfSGH'
                     ],
                     'transaction_currency': '0x80000000',
-                    'amount': 1
+                    'amount': '1'
                 },
                 'data_dt': '2019-07-29T06:29:00.123Z',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
@@ -408,7 +408,7 @@ def test_validate_post_permission_request_schema_success():
                     ],
                     'beneficiary_addrs_extra': {'DT': '002'},
                     'transaction_currency': '0x80000000',
-                    'amount': 1
+                    'amount': '1'
                 },
                 'data_dt': '2019-07-29T06:29:00.123Z',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
@@ -437,7 +437,7 @@ def test_validate_post_permission_request_schema_success():
                     ],
                     'beneficiary_addrs_extra': {'DT': '002'},
                     'transaction_currency': '0x80000000',
-                    'amount': 1
+                    'amount': '1'
                 },
                 'data_dt': '2019-07-29T06:29:00.123Z',
                 'signature': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52d'
@@ -464,7 +464,7 @@ def test_validate_post_permission_request_schema_success():
                         '3CHgkx946yyueucCMiJhyH2Vg5kBBvfSGH'
                     ],
                     'transaction_currency': '0x80000000',
-                    'amount': 1
+                    'amount': '1'
                 },
                 'data_dt': '2019-07-29T06:29:00.123Z',
                 'expire_date': 1583146201000,
@@ -493,7 +493,7 @@ def test_validate_post_permission_request_schema_success():
                         '3CHgkx946yyueucCMiJhyH2Vg5kBBvfSGH'
                     ],
                     'transaction_currency': '0x80000000',
-                    'amount': 1
+                    'amount': '1'
                 },
                 'data_dt': '2019-07-29T06:29:00.123Z',
                 'expire_date': 1583146201000,
@@ -522,7 +522,7 @@ def test_validate_post_permission_request_schema_success():
                     ],
                     'beneficiary_addrs_extra': {'DT': '002'},
                     'transaction_currency': '0x80000000',
-                    'amount': 1
+                    'amount': '1'
                 },
                 'data_dt': '2019-07-29T06:29:00.123Z',
                 'expire_date': 1583146201000,
@@ -552,7 +552,7 @@ def test_validate_post_permission_request_schema_success():
                     ],
                     'beneficiary_addrs_extra': {'DT': '002'},
                     'transaction_currency': '0x80000000',
-                    'amount': 1
+                    'amount': '1'
                 },
                 'data_dt': '2019-07-29T06:29:00.123Z',
                 'expire_date': 1583146201000,
