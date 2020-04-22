@@ -226,7 +226,7 @@ class ApiTest(unittest.TestCase):
                         '1234567890'
                     ],
                     'transaction_currency': '0x8003c301',
-                    'amount': 12345
+                    'amount': '12345'
                 },
                 'data_dt': '2019-08-06T13:24:15.425Z',
                 'permission_request_data_signature': '12345',
@@ -321,7 +321,7 @@ class ApiTest(unittest.TestCase):
                     'beneficiary_addrs': [
                         '0987654321'
                     ],
-                    'amount': 1,
+                    'amount': '1',
                     'originator_addrs': [
                         '1234567890'
                     ],

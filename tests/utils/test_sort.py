@@ -173,7 +173,7 @@ def test_sort_permission_request_data():
                 '16bUGjvunVp7LqygLHrTvHyvbvfeuRCWAh'
             ],
             'originator_vasp_code': 'VASPTWTP1',
-            'amount': 1,
+            'amount': '1',
             'beneficiary_addrs': [
                 '3CHgkx946yyueucCMiJhyH2Vg5kBBvfSGH'
             ],
@@ -199,7 +199,7 @@ def test_sort_permission_request_data():
     permission_request_data = {
         'transaction': {
             'transaction_currency': '0x80000000',
-            'amount': 1,
+            'amount': '1',
             'beneficiary_vasp_code': 'VASPTWTP2',
             'originator_addrs': [
                 '16bUGjvunVp7LqygLHrTvHyvbvfeuRCWAh'
@@ -234,7 +234,7 @@ def test_sort_permission_request_data():
         'transaction': {
             'originator_addrs_extra': {'DT': '001'},
             'transaction_currency': '0x80000000',
-            'amount': 1,
+            'amount': '1',
             'originator_vasp_code': 'VASPTWTP1',
             'beneficiary_addrs': [
                 '3CHgkx946yyueucCMiJhyH2Vg5kBBvfSGH'
@@ -277,7 +277,7 @@ def test_sort_permission_request_data():
             'beneficiary_addrs': [
                 '3CHgkx946yyueucCMiJhyH2Vg5kBBvfSGH'
             ],
-            'amount': 1,
+            'amount': '1',
             'beneficiary_vasp_code': 'VASPTWTP2',
 
         }
@@ -315,7 +315,7 @@ def test_sort_permission_request_data():
             'beneficiary_addrs': [
                 '3CHgkx946yyueucCMiJhyH2Vg5kBBvfSGH'
             ],
-            'amount': 1,
+            'amount': '1',
             'beneficiary_vasp_code': 'VASPTWTP2',
         }
     }
@@ -492,7 +492,7 @@ def test_sort_post_permission_request_data():
                     '16bUGjvunVp7LqygLHrTvHyvbvfeuRCWAh'
                 ],
                 'originator_vasp_code': 'VASPTWTP1',
-                'amount': 1,
+                'amount': '1',
                 'beneficiary_addrs': [
                     '3CHgkx946yyueucCMiJhyH2Vg5kBBvfSGH'
                 ],
@@ -530,7 +530,7 @@ def test_sort_post_permission_request_data():
         'data': {
             'data_dt': '2019-07-29T06:29:00.123Z',
             'transaction': {
-                'amount': 1,
+                'amount': '1',
                 'originator_addrs': [
                     '16bUGjvunVp7LqygLHrTvHyvbvfeuRCWAh'
                 ],
@@ -577,7 +577,7 @@ def test_sort_post_permission_request_data():
             'transaction': {
                 'originator_vasp_code': 'VASPTWTP1',
                 'beneficiary_addrs_extra': {'DT': '002'},
-                'amount': 1,
+                'amount': '1',
                 'originator_addrs': [
                     '16bUGjvunVp7LqygLHrTvHyvbvfeuRCWAh'
                 ],
@@ -627,7 +627,7 @@ def test_sort_post_permission_request_data():
             'transaction': {
                 'originator_vasp_code': 'VASPTWTP1',
                 'beneficiary_addrs_extra': {'DT': '002'},
-                'amount': 1,
+                'amount': '1',
                 'originator_addrs': [
                     '16bUGjvunVp7LqygLHrTvHyvbvfeuRCWAh'
                 ],
