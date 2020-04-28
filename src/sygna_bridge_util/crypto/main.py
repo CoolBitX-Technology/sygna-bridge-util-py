@@ -199,14 +199,16 @@ def sign_beneficiary_endpoint_url(data: dict, private_key: str) -> dict:
     Args:
         data: dict{
             vasp_code: str
-            beneficiary_endpoint_url: str
+            Option callback_permission_request_url: str
+            Option callback_txid_url: str
         }
         private_key: str
 
     Returns:
         dict{
             vasp_code: str
-            beneficiary_endpoint_url: str,
+            Option callback_permission_request_url: str
+            Option callback_txid_url: str
             signature: str
         }
 

@@ -66,7 +66,7 @@ class CryptoTest(unittest.TestCase):
                     '16bUGjvunVp7LqygLHrTvHyvbvfeuRCWAh'
                 ],
                 'transaction_currency': '0x80000000',
-                'amount': 1,
+                'amount': '1',
                 'originator_vasp_code': 'VASPTWTP1',
                 'beneficiary_vasp_code': 'VASPTWTP2',
                 'beneficiary_addrs': [
@@ -400,7 +400,7 @@ class CryptoTest(unittest.TestCase):
         mock_validate_beneficiary_endpoint_url_schema_schema.side_effect = Exception(
             'validate_beneficiary_endpoint_url_schema raise exception')
         fake_data = {
-            'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+            'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
             'vasp_code': 'VASPUSNY1'
         }
         with pytest.raises(Exception) as exception:
@@ -435,7 +435,51 @@ class CryptoTest(unittest.TestCase):
         assert mock_sign_data.call_count == 1
         data_to_sign = {
             'vasp_code': fake_data['vasp_code'],
-            'beneficiary_endpoint_url': fake_data['beneficiary_endpoint_url']
+            'callback_permission_request_url': fake_data['callback_permission_request_url']
+        }
+        assert mock_sign_data.call_args == call(data_to_sign, FAKE_PRIVATE_KEY)
+        assert result == fake_result
+
+        fake_data = {
+            'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+            'vasp_code': 'VASPUSNY1'
+        }
+        fake_result = copy.deepcopy(fake_data)
+        fake_result['signature'] = 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1' \
+                                   'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af'
+        mock_sign_data.return_value = fake_result
+        result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
+        assert mock_validate_beneficiary_endpoint_url_schema_schema.call_count == 4
+        assert mock_validate_beneficiary_endpoint_url_schema_schema.call_args == call(fake_data)
+        assert mock_validate_private_key.call_count == 3
+        assert mock_validate_private_key.call_args == call(FAKE_PRIVATE_KEY)
+        assert mock_sign_data.call_count == 2
+        data_to_sign = {
+            'vasp_code': fake_data['vasp_code'],
+            'callback_txid_url': fake_data['callback_txid_url']
+        }
+        assert mock_sign_data.call_args == call(data_to_sign, FAKE_PRIVATE_KEY)
+        assert result == fake_result
+
+        fake_data = {
+            'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+            'vasp_code': 'VASPUSNY1',
+            'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
+        }
+        fake_result = copy.deepcopy(fake_data)
+        fake_result['signature'] = 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1' \
+                                   'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af'
+        mock_sign_data.return_value = fake_result
+        result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
+        assert mock_validate_beneficiary_endpoint_url_schema_schema.call_count == 5
+        assert mock_validate_beneficiary_endpoint_url_schema_schema.call_args == call(fake_data)
+        assert mock_validate_private_key.call_count == 4
+        assert mock_validate_private_key.call_args == call(FAKE_PRIVATE_KEY)
+        assert mock_sign_data.call_count == 3
+        data_to_sign = {
+            'vasp_code': fake_data['vasp_code'],
+            'callback_permission_request_url': fake_data['callback_permission_request_url'],
+            'callback_txid_url': fake_data['callback_txid_url']
         }
         assert mock_sign_data.call_args == call(data_to_sign, FAKE_PRIVATE_KEY)
         assert result == fake_result

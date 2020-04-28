@@ -129,7 +129,7 @@ class ValidateSchemaTest(unittest.TestCase):
                     ],
                     'beneficiary_addrs_extra': {'DT': '002'},
                     'transaction_currency': '0x80000000',
-                    'amount': 1
+                    'amount': '1'
                 },
                 'data_dt': '2019-07-29T06:29:00.123Z',
                 'signature':
