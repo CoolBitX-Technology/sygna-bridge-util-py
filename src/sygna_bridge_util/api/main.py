@@ -256,7 +256,8 @@ class API:
          Args:
             data: dict{
                 vasp_code: str
-                beneficiary_endpoint_url: str
+                Option callback_permission_request_url: str
+                Option callback_txid_url: str
                 signature: str
             }
 

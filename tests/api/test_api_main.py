@@ -245,7 +245,8 @@ class ApiTest(unittest.TestCase):
             assert mock_validate_transfer_id.call_count == 2
             assert mock_validate_transfer_id.call_args == call(transfer_id)
             assert mock_get_sb.call_count == 1
-            assert mock_get_sb.call_args == call(DOMAIN + 'api/v1.1.0/bridge/transaction/status?transfer_id=' + transfer_id)
+            assert mock_get_sb.call_args == call(
+                DOMAIN + 'api/v1.1.0/bridge/transaction/status?transfer_id=' + transfer_id)
         except ValidationError:
             pytest.fail('Unexpected ValidationError')
 
@@ -398,7 +399,7 @@ class ApiTest(unittest.TestCase):
         post_beneficiary_endpoint_url_data = {
             'signature': 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1'
                          'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af',
-            'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge//',
+            'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
             'vasp_code': 'VASPUSNY1'
         }
         with pytest.raises(ValidationError) as exception:
@@ -419,6 +420,47 @@ class ApiTest(unittest.TestCase):
             assert mock_validate_post_beneficiary_endpoint_url_schema.call_args == call(
                 post_beneficiary_endpoint_url_data)
             assert mock_post_sb.call_count == 1
+            assert mock_post_sb.call_args == call(DOMAIN + 'api/v1.1.0/bridge/vasp/beneficiary-endpoint-url',
+                                                  sorted_post_beneficiary_endpoint_url_data)
+        except ValidationError:
+            pytest.fail('Unexpected ValidationError')
+
+        post_beneficiary_endpoint_url_data = {
+            'signature': 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1'
+                         'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af',
+            'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
+            'vasp_code': 'VASPUSNY1',
+            'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+        }
+        sorted_post_beneficiary_endpoint_url_data = sort_post_beneficiary_endpoint_url_data(
+            post_beneficiary_endpoint_url_data)
+        try:
+            response = instance.post_beneficiary_endpoint_url(post_beneficiary_endpoint_url_data)
+            assert response == fake_post_beneficiary_endpoint_url_response
+            assert mock_validate_post_beneficiary_endpoint_url_schema.call_count == 3
+            assert mock_validate_post_beneficiary_endpoint_url_schema.call_args == call(
+                post_beneficiary_endpoint_url_data)
+            assert mock_post_sb.call_count == 2
+            assert mock_post_sb.call_args == call(DOMAIN + 'api/v1.1.0/bridge/vasp/beneficiary-endpoint-url',
+                                                  sorted_post_beneficiary_endpoint_url_data)
+        except ValidationError:
+            pytest.fail('Unexpected ValidationError')
+
+        post_beneficiary_endpoint_url_data = {
+            'signature': 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1'
+                         'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af',
+            'vasp_code': 'VASPUSNY1',
+            'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+        }
+        sorted_post_beneficiary_endpoint_url_data = sort_post_beneficiary_endpoint_url_data(
+            post_beneficiary_endpoint_url_data)
+        try:
+            response = instance.post_beneficiary_endpoint_url(post_beneficiary_endpoint_url_data)
+            assert response == fake_post_beneficiary_endpoint_url_response
+            assert mock_validate_post_beneficiary_endpoint_url_schema.call_count == 4
+            assert mock_validate_post_beneficiary_endpoint_url_schema.call_args == call(
+                post_beneficiary_endpoint_url_data)
+            assert mock_post_sb.call_count == 3
             assert mock_post_sb.call_args == call(DOMAIN + 'api/v1.1.0/bridge/vasp/beneficiary-endpoint-url',
                                                   sorted_post_beneficiary_endpoint_url_data)
         except ValidationError:
