@@ -51,9 +51,8 @@ __permission_request_schema = {
                     'minLength': 1
                 },
                 'amount': {
-                    'type': 'string',
-                    'minLength': 1,
-                    'pattern': '^\\d*\\.?\\d*$'
+                    'type': 'number',
+                    'exclusiveMinimum': 0
                 }
             },
             'required': [

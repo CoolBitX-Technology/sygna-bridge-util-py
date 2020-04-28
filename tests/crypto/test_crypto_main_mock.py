@@ -66,7 +66,7 @@ class CryptoTest(unittest.TestCase):
                     '16bUGjvunVp7LqygLHrTvHyvbvfeuRCWAh'
                 ],
                 'transaction_currency': '0x80000000',
-                'amount': '1',
+                'amount': 1,
                 'originator_vasp_code': 'VASPTWTP1',
                 'beneficiary_vasp_code': 'VASPTWTP2',
                 'beneficiary_addrs': [

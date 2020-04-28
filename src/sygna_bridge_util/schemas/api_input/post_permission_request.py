@@ -54,9 +54,8 @@ __post_permission_request = {
                             'minLength': 1
                         },
                         'amount': {
-                            'type': 'string',
-                            'minLength': 1,
-                            'pattern': '^\\d*\\.?\\d*$'
+                            'type': 'number',
+                            'exclusiveMinimum': 0
                         }
                     },
                     'required': [

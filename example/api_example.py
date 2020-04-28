@@ -59,7 +59,7 @@ def post_permission_request():
                         '3F4ReDwiMLu8LrAiXwwD2DhH8U9xMrUzUf'
                     ],
                     'transaction_currency': '0x80000000',
-                    'amount': '1.2'
+                    'amount': 1.2
                 },
                 'data_dt': '2019-07-29T06:29:00.123Z',
                 'signature': '219ce35edceaec45e5815134953170f0f6b7d7deb038054ec2e978411e1d0f9954b54b'
