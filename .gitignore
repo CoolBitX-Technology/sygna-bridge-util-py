@@ -1,5 +1,11 @@
 
 # Environments
-
 .idea
+
+# Python:
 /venv/
+.dist
+.build
+*.egg
+*.egg-info
+/*.egg-info/

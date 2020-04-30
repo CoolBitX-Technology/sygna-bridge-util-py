@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+freezegun = "*"
+
+[packages]
+requests = "*"
+jsonschema = "*"
+rfc3986-validator = "*"
+rfc3339-validator = "*"
+eciespy = "*"
+ecdsa = "*"
+pycryptodome = "*"
+
+[requires]
+python_version = "3.7"
