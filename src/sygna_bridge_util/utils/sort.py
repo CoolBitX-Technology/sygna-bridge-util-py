@@ -298,19 +298,28 @@ def sort_beneficiary_endpoint_url_data(beneficiary_endpoint_url_data: dict) -> d
      Args:
         beneficiary_endpoint_url_data : dict{
             vasp_code: str
-            beneficiary_endpoint_url: str
+            Optional callback_permission_request_url: str
+            Optional callback_txid_url: str
         }
 
      Returns:
         sorted dict{
             vasp_code: str
-            beneficiary_endpoint_url: str
+            Optional callback_permission_request_url: str
+            Optional callback_txid_url: str
         }
      """
     sorted_beneficiary_endpoint_url_data = {
-        'vasp_code': beneficiary_endpoint_url_data['vasp_code'],
-        'beneficiary_endpoint_url': beneficiary_endpoint_url_data['beneficiary_endpoint_url']
+        'vasp_code': beneficiary_endpoint_url_data['vasp_code']
     }
+    if 'callback_permission_request_url' in beneficiary_endpoint_url_data:
+        sorted_beneficiary_endpoint_url_data['callback_permission_request_url'] = beneficiary_endpoint_url_data[
+            'callback_permission_request_url']
+
+    if 'callback_txid_url' in beneficiary_endpoint_url_data:
+        sorted_beneficiary_endpoint_url_data['callback_txid_url'] = beneficiary_endpoint_url_data[
+            'callback_txid_url']
+
     return sorted_beneficiary_endpoint_url_data
 
 
@@ -320,14 +329,16 @@ def sort_post_beneficiary_endpoint_url_data(post_beneficiary_endpoint_url_data: 
      Args:
         post_beneficiary_endpoint_url_data : dict{
             vasp_code: str
-            beneficiary_endpoint_url: str
+            Optional callback_permission_request_url: str
+            Optional callback_txid_url: str
             signature: str
         }
 
      Returns:
         sorted dict{
             vasp_code: str
-            beneficiary_endpoint_url: str
+            Optional callback_permission_request_url: str
+            Optional callback_txid_url: str
             signature:str
         }
      """
