@@ -9,3 +9,5 @@
 *.egg
 *.egg-info
 /*.egg-info/
+.pytest_cache
+__pycache__
