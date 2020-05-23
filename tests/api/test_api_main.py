@@ -4,7 +4,6 @@ from unittest.mock import patch, call
 import pytest
 import json
 from sygna_bridge_util.api import main, API
-from jsonschema import ValidationError
 
 from sygna_bridge_util.config import (
     SYGNA_BRIDGE_CENTRAL_PUBKEY,
@@ -193,9 +192,9 @@ class ApiTest(unittest.TestCase):
     def test_get_status(self, mock_validate_transfer_id, mock_get_sb):
         instance = API(ORIGINATOR_API_KEY, DOMAIN)
 
-        mock_validate_transfer_id.side_effect = ValidationError('validate_transfer_id raise exception')
+        mock_validate_transfer_id.side_effect = ValueError('validate_transfer_id raise exception')
         transfer_id = '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
-        with pytest.raises(ValidationError) as exception:
+        with pytest.raises(ValueError) as exception:
             instance.get_status(transfer_id)
         assert 'validate_transfer_id raise exception' == str(exception.value)
         assert mock_validate_transfer_id.call_count == 1
