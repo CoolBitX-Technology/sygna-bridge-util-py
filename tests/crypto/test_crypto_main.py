@@ -54,43 +54,52 @@ def test_sign_data():
 def test_sign_permission_request():
     fake_data = {
         'transaction': {
-            'amount': 1,
-            'originator_addrs': [
-                '16bUGjvunVp7LqygLHrTvHyvbvfeuRCWAh'
-            ],
-            'transaction_currency': '0x80000000',
-            'originator_vasp_code': 'VASPTWTP1',
-            'beneficiary_addrs': [
-                '3CHgkx946yyueucCMiJhyH2Vg5kBBvfSGH'
-            ],
-            'beneficiary_vasp_code': 'VASPTWTP2'
+            "originator_vasp": {
+                "vasp_code": "VASPJPJT4",
+                "addrs": [
+                    {
+                        "address": "bnb1vynn9hamtqg9me7y6frja0rvfva9saprl55gl4",
+                        "addr_extra_info": []
+                    }
+                ]
+            },
+            "beneficiary_vasp": {
+                "vasp_code": "VASPJPJT3",
+                "addrs": [
+                    {
+                        "address": "bnb1hj767k8nlf0jn6p3c3wvl0r0qfwfrvuxrqlxce"
+                    }
+                ]
+            },
+            "currency_id": "sygna:0x800002ca.bnb1u9j9hkst6gf09dkdvxlj7puk8c7vh68a0kkmht",
+            "amount": "0.1234"
         },
         'data_dt': '2019-07-29T06:29:00.123Z',
         'private_info': '6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918',
     }
     # signature from javascript util
-    expected_signature = 'c7b9c1edc35e17dc0a78858d68786e5bcb26bbc09d02a0e1747e7eeabdc59d4' \
-                         'e79c6d1156359a06b1662084d782bd86f4bdc6cc5aa6696f20c5ea8e20fa328e8'
+    expected_signature = '63dedb9a24ec18f2f90fa7b71a42e585b2c4577e86e87a8c906e73cb20dbf8bf3' \
+                         'a1bdc447e2566063b460c828a432c31db1342630142a2f3ff5b00d58886fd19'
     result = sign_permission_request(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
     is_valid = verify_data(result, FAKE_PUBLIC_KEY)
     assert is_valid is True
 
-    fake_data['transaction']['originator_addrs_extra'] = {'DT': '001'}
+    fake_data['transaction']['originator_vasp']['addrs'][0]['addr_extra_info'].append({'DT': '001'})
     # signature from javascript util
-    expected_signature = 'c0ca54c686ca3003dadec247a2cfdd83079826305edd79e3b8ea60fb25a49bd35a' \
-                         '63352e186f9b69c48b3cc2f375e7e28899aa2c90e0bb5157005ad1987ed834'
+    expected_signature = '5da17f9a81e97279407c033aa1348c85069d4a81708830a7f000066583e8054a1c826100' \
+                         'cbfb97b8829471391a40c1333451d2c849012ae231bbcb168a5ce3c8'
     result = sign_permission_request(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
     is_valid = verify_data(result, FAKE_PUBLIC_KEY)
     assert is_valid is True
 
-    fake_data['transaction']['beneficiary_addrs_extra'] = {'DT': '002'}
+    fake_data['transaction']['beneficiary_vasp']['addrs'][0]['addr_extra_info'] = [{'DT': '002'}]
     # signature from javascript util
-    expected_signature = '8549bd107f05f90febc0dece2966a64c1edd093e1e0268608a5d23ea029045da4034' \
-                         '55d764fc3b9663177de9033ac1fb95f9c381f02b26a4f49f0a3c74993256'
+    expected_signature = '69e374312c6b6d3b60065c5108a01bec7e0e4dd1d3f4efac620c167d24d5e33c7a84d870' \
+                         '2502908567e94490182c6ae49db0f0f3967b4e39baf2692a42ee3d9f'
     result = sign_permission_request(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
@@ -98,9 +107,10 @@ def test_sign_permission_request():
     assert is_valid is True
 
     fake_data['expire_date'] = 4107667801000
+    del fake_data['signature']
     # signature from javascript util
-    expected_signature = '0b7b524648dec1e0c4c67f741c1922b148a03d31b4b39d76ff0d8a8d55b0d36f492ef51' \
-                         'ddd132bf738b082702ce004c957649dfa046c9316219a8e5b0dce07fb'
+    expected_signature = 'bee75e030fc60bd862d1c1c917ce460366a028313a537963205b255bbfd3e8267f76279a' \
+                         '27f4635817af063b9131a07ce1d918bb458bc645481c0c14da9b574b'
     result = sign_permission_request(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
@@ -128,40 +138,43 @@ def test_sign_permission():
         'transfer_id': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
     }
     # signature from javascript util
-    expected_signature = '8500fde0806c6f8c94db848c4096cbc7deee3ee659b6dce3cb3accea8391c81' \
-                         '122b46245801669b3da200e4311e8ef4012587be183bc00bed372204899a57595'
+    expected_signature = '7969f5a533d51b49dc6343c4ec045ae9844f534ada712310402e2fa56b55894' \
+                         'b1c493e25658b0c1c0afaf6560c2fbd70fa206619ea7896bf79975a844f6e1f67'
     result = sign_permission(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
     is_valid = verify_data(result, FAKE_PUBLIC_KEY)
     assert is_valid is True
 
+    del fake_data['signature']
     fake_data['expire_date'] = 4107667801000
     # signature from javascript util
-    expected_signature = 'e4f0893278051c4b67a0e62fe85249c6a710374a1852aa3c19525193815721e7' \
-                         '4212601dc25ef52486d490efe49dd9a3d7a4a7dcaf3d40e995c9baed42bb5b9f'
+    expected_signature = '1148b1cc1d65a63218818191d8d7eb87836d0c9b94fbc2c955b0b94a253594a15c35' \
+                         '5f940afe1567505fe859e82ac5b560c4e4ebc6b987e591e98477e5619325'
     result = sign_permission(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
     is_valid = verify_data(result, FAKE_PUBLIC_KEY)
     assert is_valid is True
 
+    del fake_data['signature']
     fake_data['permission_status'] = 'REJECTED'
     fake_data['reject_code'] = 'BVRC001'
     # signature from javascript util
-    expected_signature = 'bb61d40ea18384536f634bae35c69e62457fd1428e68b253e9f9af46797933ab4' \
-                         'd895bcad915497c7722115908e857863bf0bd9591ca0ee0b68bb5caf40f3a20'
+    expected_signature = '49f199360bed6391eae898b8bead820cc3fcc636f20cd453bc935dd7e6917c2375414ba' \
+                         'b45ea289dba17eaa5ef0bd8d1cb17642557aff6960aaabea89360dfd3'
     result = sign_permission(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
     is_valid = verify_data(result, FAKE_PUBLIC_KEY)
     assert is_valid is True
 
+    del fake_data['signature']
     fake_data['reject_code'] = 'BVRC999'
     fake_data['reject_message'] = 'service_downtime'
     # signature from javascript util
-    expected_signature = 'd4d0aff2a18a499b76dfdbe688ea7f07c16145af81dc8c351df4e008228f75790a' \
-                         '31c2245f6d0e560645acde196ab19aa3871dd18fbe23dd22bb6a407efd73c9'
+    expected_signature = '1145b5512ee080c740cb0ec439aba4ba8daf4b51901c9df1684e8398570331fc74c' \
+                         'f879a14b253d06322b229854ee04a7393399fcd326d60d2d6be7186d3a0f5'
     result = sign_permission(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
@@ -175,8 +188,8 @@ def test_sign_transaction_id():
         'transfer_id': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
     }
     # signature from javascript util
-    expected_signature = '64da6f5f49be9d3103cdbee22df1b41cfac59d8eda7851c3d28c41f9b6a015' \
-                         '52519759653fa16e61e0179d19be3acbf7915b6859f653909b6120041cd073eaa1'
+    expected_signature = 'e644fea7fafa0dc7d0cb9e290145582703ae0de675aa6763ceb9f40a9bba66a4' \
+                         '19ac5be7a3329b997b38272aeca060d9855ad8f612f0899228e2eb4878e40e1f'
     result = sign_transaction_id(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
@@ -190,8 +203,8 @@ def test_sign_beneficiary_endpoint_url():
         'vasp_code': 'VASPUSNY1'
     }
     # signature from javascript util
-    expected_signature = '0d02fa6a3661fa4cd9beeda27b04a1b990aa191307e6c192e943499855d49e2e7ebdec9fee571' \
-                         '4fcb3b43d145fba13e02a9a7f5282fb270ad6c05a72cfe85ec4'
+    expected_signature = 'bcc1f78ee790b19dfdc9b2395f395f2e73e05b9171c7f1ef8e5c36243ae1a7d149bedfe18b' \
+                         'dbf80747ad726b06f607bd01aad552279a9c0811b63eba29937dde'
     result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
@@ -204,8 +217,8 @@ def test_sign_beneficiary_endpoint_url():
         'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
     }
     # signature from javascript util
-    expected_signature = 'dfd9cd0a52ae368d8e149985791cedc3a52960fb67df15d327d7b9221f3ec1677d9f673ef75151c' \
-                         '6f4964294f9bdce3e2dfc87a269c4f2b0722a809ad9f67e00'
+    expected_signature = '4d67f0444d81c0f1e2e38bc27e1ea6e198e35b246187c7e8c1b9fa4913a2c0e7298dcc3d3f'\
+                         'd48ba3342555b0c2bc127d0e1147991aa6bfc01801554313ed7b96'
     result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
@@ -217,8 +230,8 @@ def test_sign_beneficiary_endpoint_url():
         'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
     }
     # signature from javascript util
-    expected_signature = '9520de437bc7f8bd47404fa630faeb2d0c408fc895245f29cc292fdac564a50853ccd5014415f0158' \
-                         '0361ad2cc317f0d45b940c21b6464fbedeaf7829dc11c76'
+    expected_signature = '9520de437bc7f8bd47404fa630faeb2d0c408fc895245f29cc292fdac564a50853ccd501'\
+                         '4415f01580361ad2cc317f0d45b940c21b6464fbedeaf7829dc11c76'
     result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
