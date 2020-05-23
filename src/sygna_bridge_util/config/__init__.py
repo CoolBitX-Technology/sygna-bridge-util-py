@@ -4,8 +4,7 @@ from .rejectcode import RejectCode
 from .main import (
     SYGNA_BRIDGE_CENTRAL_PUBKEY,
     SYGNA_BRIDGE_CENTRAL_PUBKEY_TEST,
-    HTTP_TIMEOUT,
-    EXPIRE_DATE_MIN_OFFSET
+    HTTP_TIMEOUT
 )
 
 __all__ = [
@@ -13,6 +12,5 @@ __all__ = [
     'RejectCode',
     'SYGNA_BRIDGE_CENTRAL_PUBKEY',
     'SYGNA_BRIDGE_CENTRAL_PUBKEY_TEST',
-    'HTTP_TIMEOUT',
-    'EXPIRE_DATE_MIN_OFFSET'
+    'HTTP_TIMEOUT'
 ]
