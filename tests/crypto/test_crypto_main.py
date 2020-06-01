@@ -217,7 +217,7 @@ def test_sign_beneficiary_endpoint_url():
         'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
     }
     # signature from javascript util
-    expected_signature = '4d67f0444d81c0f1e2e38bc27e1ea6e198e35b246187c7e8c1b9fa4913a2c0e7298dcc3d3f'\
+    expected_signature = '4d67f0444d81c0f1e2e38bc27e1ea6e198e35b246187c7e8c1b9fa4913a2c0e7298dcc3d3f' \
                          'd48ba3342555b0c2bc127d0e1147991aa6bfc01801554313ed7b96'
     result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
@@ -230,7 +230,7 @@ def test_sign_beneficiary_endpoint_url():
         'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
     }
     # signature from javascript util
-    expected_signature = '9520de437bc7f8bd47404fa630faeb2d0c408fc895245f29cc292fdac564a50853ccd501'\
+    expected_signature = '9520de437bc7f8bd47404fa630faeb2d0c408fc895245f29cc292fdac564a50853ccd501' \
                          '4415f01580361ad2cc317f0d45b940c21b6464fbedeaf7829dc11c76'
     result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
