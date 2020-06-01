@@ -91,10 +91,12 @@ def post_transaction_id():
 
 def post_beneficiary_endpoint_url():
     post_beneficiary_endpoint_url_data = {
-        'signature': '4b97136c369d40d05af5c381c6cfa2a5118c56c375caff6dc5cdca0bba2c0be739'
-                     '1b398d94473e4b11aec50860b10f593202d1dc3af279fa1814e7174184c476',
-        'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
-        'vasp_code': 'VASPUSNY1'
+        'signature': '05a42299f6d97e96ac21ea2fd90dc4c9b1b42e553ea6e81111b8568a274fb1f6511fa2084eb28fb'
+                     '4a60a2dec3bd30ef987a7c399c04549b1a0f3bf5e6c99eb39',
+        'callback_permission_request_url': 'https://test-api.sygna.io/sb/api/v1.1.0/bridge/'
+                                           'transaction/permission-request',
+        'vasp_code': 'VASPUSNY1',
+        'callback_txid_url': 'https://test-api.sygna.io/sb/api/v1.1.0/bridge/transaction/txid',
     }
     instance = API(BENEFICIARY_API_KEY, DOMAIN)
     post_beneficiary_endpoint_url_result = instance.post_beneficiary_endpoint_url(post_beneficiary_endpoint_url_data)

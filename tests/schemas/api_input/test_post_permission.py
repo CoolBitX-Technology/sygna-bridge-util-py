@@ -223,11 +223,13 @@ def test_validate_post_permission_schema():
     assert_validate_result(data,
                            "'{0}' is not one of {1}".format(data['reject_code'], [code.value for code in RejectCode]))
 
-    data['reject_code'] = RejectCode.BVRC001.value
-    try:
-        validate(instance=data, schema=get_post_permission_schema(data), format_checker=draft7_format_checker)
-    except ValidationError:
-        pytest.fail('Unexpected ValidationError')
+    # all valid reject codes should be accepted
+    for code in RejectCode:
+        data['reject_code'] = code.value
+        try:
+            validate(instance=data, schema=get_post_permission_schema(data), format_checker=draft7_format_checker)
+        except ValidationError:
+            pytest.fail('Unexpected ValidationError')
 
     # data['reject_code'] = RejectCode.BVRC999.value
     # assert_validate_result(data, "'reject_message' is a required property")

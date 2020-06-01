@@ -1,4 +1,4 @@
-from jsonschema import validate, draft7_format_checker
+from jsonschema import validate, draft7_format_checker, ValidationError
 from sygna_bridge_util.schemas import (
     get_permission_request_schema,
     get_permission_schema,
@@ -54,8 +54,22 @@ def validate_post_transaction_id_schema(data: dict) -> None:
 
 
 def validate_beneficiary_endpoint_url_schema(data: dict) -> None:
-    validate_schema(data, get_beneficiary_endpoint_url_schema())
+    try:
+        validate_schema(data, get_beneficiary_endpoint_url_schema())
+    except ValidationError as exception:
+        if exception.message == "'callback_permission_request_url' is a required property" \
+                or exception.message == "'callback_txid_url' is a required property":
+            exception.message = "Selecting one or more of the following property is mandatory:" \
+                                "'callback_permission_request_url', 'callback_txid_url'"
+        raise exception
 
 
 def validate_post_beneficiary_endpoint_url_schema(data: dict) -> None:
-    validate_schema(data, get_post_beneficiary_endpoint_url_schema())
+    try:
+        validate_schema(data, get_post_beneficiary_endpoint_url_schema())
+    except ValidationError as exception:
+        if exception.message == "'callback_permission_request_url' is a required property" \
+                or exception.message == "'callback_txid_url' is a required property":
+            exception.message = "Selecting one or more of the following property is mandatory:" \
+                                "'callback_permission_request_url', 'callback_txid_url'"
+        raise exception

@@ -671,25 +671,75 @@ def test_sort_post_permission_request_data():
 
 def test_sort_beneficiary_endpoint_url_data():
     beneficiary_endpoint_url_data = {
-        'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+        'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
         'vasp_code': 'VASPTWTP1'
     }
     expected_sorted_dict_str = json.dumps({
         'vasp_code': beneficiary_endpoint_url_data['vasp_code'],
-        'beneficiary_endpoint_url': beneficiary_endpoint_url_data['beneficiary_endpoint_url']
+        'callback_permission_request_url': beneficiary_endpoint_url_data['callback_permission_request_url']
+    })
+    assert json.dumps(sort_beneficiary_endpoint_url_data(beneficiary_endpoint_url_data)) == expected_sorted_dict_str
+
+    beneficiary_endpoint_url_data = {
+        'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+        'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
+        'vasp_code': 'VASPTWTP1'
+    }
+    expected_sorted_dict_str = json.dumps({
+        'vasp_code': beneficiary_endpoint_url_data['vasp_code'],
+        'callback_permission_request_url': beneficiary_endpoint_url_data['callback_permission_request_url'],
+        'callback_txid_url': beneficiary_endpoint_url_data['callback_txid_url']
+    })
+    assert json.dumps(sort_beneficiary_endpoint_url_data(beneficiary_endpoint_url_data)) == expected_sorted_dict_str
+
+    beneficiary_endpoint_url_data = {
+        'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+        'vasp_code': 'VASPTWTP1'
+    }
+    expected_sorted_dict_str = json.dumps({
+        'vasp_code': beneficiary_endpoint_url_data['vasp_code'],
+        'callback_txid_url': beneficiary_endpoint_url_data['callback_txid_url']
     })
     assert json.dumps(sort_beneficiary_endpoint_url_data(beneficiary_endpoint_url_data)) == expected_sorted_dict_str
 
 
 def test_sort_post_beneficiary_endpoint_url_data():
     post_beneficiary_endpoint_url_data = {
-        'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+        'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
         'signature': '1234567890',
         'vasp_code': 'VASPTWTP1'
     }
     expected_sorted_dict_str = json.dumps({
         'vasp_code': post_beneficiary_endpoint_url_data['vasp_code'],
-        'beneficiary_endpoint_url': post_beneficiary_endpoint_url_data['beneficiary_endpoint_url'],
+        'callback_permission_request_url': post_beneficiary_endpoint_url_data['callback_permission_request_url'],
+        'signature': post_beneficiary_endpoint_url_data['signature'],
+    })
+    assert json.dumps(
+        sort_post_beneficiary_endpoint_url_data(post_beneficiary_endpoint_url_data)) == expected_sorted_dict_str
+
+    post_beneficiary_endpoint_url_data = {
+        'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
+        'signature': '1234567890',
+        'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+        'vasp_code': 'VASPTWTP1'
+    }
+    expected_sorted_dict_str = json.dumps({
+        'vasp_code': post_beneficiary_endpoint_url_data['vasp_code'],
+        'callback_permission_request_url': post_beneficiary_endpoint_url_data['callback_permission_request_url'],
+        'callback_txid_url': post_beneficiary_endpoint_url_data['callback_txid_url'],
+        'signature': post_beneficiary_endpoint_url_data['signature'],
+    })
+    assert json.dumps(
+        sort_post_beneficiary_endpoint_url_data(post_beneficiary_endpoint_url_data)) == expected_sorted_dict_str
+
+    post_beneficiary_endpoint_url_data = {
+        'signature': '1234567890',
+        'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+        'vasp_code': 'VASPTWTP1'
+    }
+    expected_sorted_dict_str = json.dumps({
+        'vasp_code': post_beneficiary_endpoint_url_data['vasp_code'],
+        'callback_txid_url': post_beneficiary_endpoint_url_data['callback_txid_url'],
         'signature': post_beneficiary_endpoint_url_data['signature'],
     })
     assert json.dumps(

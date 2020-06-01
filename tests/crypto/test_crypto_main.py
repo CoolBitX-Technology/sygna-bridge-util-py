@@ -186,12 +186,39 @@ def test_sign_transaction_id():
 
 def test_sign_beneficiary_endpoint_url():
     fake_data = {
-        'beneficiary_endpoint_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+        'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
         'vasp_code': 'VASPUSNY1'
     }
     # signature from javascript util
-    expected_signature = '72283fb8ba3ceba13bcb29e263fb283eabe4b76c9db114dfad5f9da4ef1d664077e74b1f' \
-                         '27133efb7450ef5bd4b72b35f59ee609703a74f6692e9b5ca9c4f8f5'
+    expected_signature = '0d02fa6a3661fa4cd9beeda27b04a1b990aa191307e6c192e943499855d49e2e7ebdec9fee571' \
+                         '4fcb3b43d145fba13e02a9a7f5282fb270ad6c05a72cfe85ec4'
+    result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
+    assert result['signature'] == expected_signature
+
+    is_valid = verify_data(result, FAKE_PUBLIC_KEY)
+    assert is_valid is True
+
+    fake_data = {
+        'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
+        'vasp_code': 'VASPUSNY1',
+        'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+    }
+    # signature from javascript util
+    expected_signature = 'dfd9cd0a52ae368d8e149985791cedc3a52960fb67df15d327d7b9221f3ec1677d9f673ef75151c' \
+                         '6f4964294f9bdce3e2dfc87a269c4f2b0722a809ad9f67e00'
+    result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
+    assert result['signature'] == expected_signature
+
+    is_valid = verify_data(result, FAKE_PUBLIC_KEY)
+    assert is_valid is True
+
+    fake_data = {
+        'vasp_code': 'VASPUSNY1',
+        'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+    }
+    # signature from javascript util
+    expected_signature = '9520de437bc7f8bd47404fa630faeb2d0c408fc895245f29cc292fdac564a50853ccd5014415f0158' \
+                         '0361ad2cc317f0d45b940c21b6464fbedeaf7829dc11c76'
     result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 

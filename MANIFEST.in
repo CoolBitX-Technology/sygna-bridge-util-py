@@ -1,5 +1,5 @@
 include requirements.txt
 include README.md
 
-recursive-include tests *.py
-recursive-include example *.py
+recursive-exclude tests *.py
+recursive-exclude example *.py

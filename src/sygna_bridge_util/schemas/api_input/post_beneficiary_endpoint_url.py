@@ -7,7 +7,11 @@ __post_beneficiary_endpoint_url = {
             "type": "string",
             "minLength": 1
         },
-        "beneficiary_endpoint_url": {
+        "callback_permission_request_url": {
+            "type": "string",
+            "format": "uri"
+        },
+        "callback_txid_url": {
             "type": "string",
             "format": "uri"
         },
@@ -18,10 +22,13 @@ __post_beneficiary_endpoint_url = {
             "pattern": "^[0123456789A-Fa-f]+$"
         }
     },
-    "required": [
-        "vasp_code",
-        "beneficiary_endpoint_url",
-        "signature"
+    "anyOf": [
+        {
+            "required": ["vasp_code", "callback_permission_request_url", "signature"]
+        },
+        {
+            "required": ["vasp_code", "callback_txid_url", "signature"]
+        }
     ],
     "additionalProperties": False
 }
