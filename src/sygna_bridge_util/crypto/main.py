@@ -7,6 +7,11 @@ from sygna_bridge_util.validator import (
 
 
 def sygna_encrypt_private_data(data: Union[dict, str], public_key: str) -> str:
+    """ the method would be deprecated next version, use encrypt_private_data instead """
+    return encrypt_private_data(data, public_key)
+
+
+def encrypt_private_data(data: Union[dict, str], public_key: str) -> str:
     """ Encrypt private info data to hex string.
     Args:
         data: dict or str. private info in data format
@@ -22,7 +27,12 @@ def sygna_encrypt_private_data(data: Union[dict, str], public_key: str) -> str:
 
 
 def sygna_decrypt_private_data(private_message: str, private_key: str) -> Union[dict, str]:
-    """ Decode private info from recipient server."""
+    """ the method would be deprecated next version, use decrypt_private_data instead """
+    return decrypt_private_data(private_message, private_key)
+
+
+def decrypt_private_data(private_message: str, private_key: str) -> Union[dict, str]:
+    """ Decrypt private info from recipient server."""
     decode_str = ecies.ecies_decrypt(private_message, private_key)
     try:
         return json.loads(decode_str)
