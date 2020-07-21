@@ -109,6 +109,7 @@ def sign_permission_request(data: dict, private_key: str) -> dict:
             }
             data_dt: str
             Optional expire_date: int
+            Optional need_validate_addr: bool
             signature: str
         }
     """
