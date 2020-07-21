@@ -72,6 +72,7 @@ def sign_permission_request(data: dict, private_key: str) -> dict:
             }
             data_dt: str
             Optional expire_date: int
+            Optional need_validate_addr: bool
         }
         private_key: str
 
@@ -180,6 +181,7 @@ def sign_beneficiary_endpoint_url(data: dict, private_key: str) -> dict:
             vasp_code: str
             Option callback_permission_request_url: str
             Option callback_txid_url: str
+            Option callback_validate_ddr_url: str
         }
         private_key: str
 

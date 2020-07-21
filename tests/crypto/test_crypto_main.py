@@ -120,11 +120,11 @@ def test_sign_permission_request():
 
 def test_sign_callback():
     fake_data = {
-        'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
+        'callback_url': 'https://api.sygna.io/v2/bridge/'
     }
     # signature from javascript util
-    expected_signature = '2cf2aaf91bf0056078542204a97d3462c17586f46b1e4fb63fc418a6c7f8e27f37f' \
-                         '61a85a8425774b77466c2f5042352b295aa7d584fcf70bbadaf3ebbaef2bd'
+    expected_signature = '825a820f4e331acc6f53a0b745b7caba139c922131f9356f7b4d914040b9d3fa469764289e8'\
+                         '1cf989a5c143aa9f0ae88fc1357ca81584041b09639faab178672'
     result = sign_callback(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
@@ -199,12 +199,12 @@ def test_sign_transaction_id():
 
 def test_sign_beneficiary_endpoint_url():
     fake_data = {
-        'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
+        'callback_permission_request_url': 'https://api.sygna.io/v2/bridge/permission-request',
         'vasp_code': 'VASPUSNY1'
     }
     # signature from javascript util
-    expected_signature = 'bcc1f78ee790b19dfdc9b2395f395f2e73e05b9171c7f1ef8e5c36243ae1a7d149bedfe18b' \
-                         'dbf80747ad726b06f607bd01aad552279a9c0811b63eba29937dde'
+    expected_signature = 'f0f80cbf7ae85ab54f49797f99ec4905a83db0ea774cf4c76d07a66620b8b18107e'\
+                         '2f34237d7a0ba595d423da5bd88602a075d7e3d8934eedc551aeeccb3d1fd'
     result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
@@ -212,13 +212,13 @@ def test_sign_beneficiary_endpoint_url():
     assert is_valid is True
 
     fake_data = {
-        'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
+        'callback_permission_request_url': 'https://api.sygna.io/v2/bridge/permission-request',
         'vasp_code': 'VASPUSNY1',
-        'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+        'callback_txid_url': 'https://api.sygna.io/v2/bridge/txid',
     }
     # signature from javascript util
-    expected_signature = '4d67f0444d81c0f1e2e38bc27e1ea6e198e35b246187c7e8c1b9fa4913a2c0e7298dcc3d3f' \
-                         'd48ba3342555b0c2bc127d0e1147991aa6bfc01801554313ed7b96'
+    expected_signature = 'f515b493b609c6c1fb5017ba62aa7f7089bf82a56c259685f7257fdad2bb761717'\
+                         '88a41b2cf526e7e85893027e3b6c5d0ff03b10f0a61db25eab6e11991570be'
     result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 
@@ -226,12 +226,14 @@ def test_sign_beneficiary_endpoint_url():
     assert is_valid is True
 
     fake_data = {
+        'callback_permission_request_url': 'https://api.sygna.io/v2/bridge/permission-request',
         'vasp_code': 'VASPUSNY1',
-        'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+        'callback_txid_url': 'https://api.sygna.io/v2/bridge/txid',
+        'callback_validate_addr_url': 'https://api.sygna.io/v2/bridge/permission-request',
     }
     # signature from javascript util
-    expected_signature = '9520de437bc7f8bd47404fa630faeb2d0c408fc895245f29cc292fdac564a50853ccd501' \
-                         '4415f01580361ad2cc317f0d45b940c21b6464fbedeaf7829dc11c76'
+    expected_signature = 'db7ade00683ad7a0a34b9ebf4352c388d19ead06e88a95785ed388d801424c407'\
+                         'f3112aa709eab7d3bb4682df177241d78db14e6c63faccc643ef7fc11f3a4a7'
     result = sign_beneficiary_endpoint_url(fake_data, FAKE_PRIVATE_KEY)
     assert result['signature'] == expected_signature
 

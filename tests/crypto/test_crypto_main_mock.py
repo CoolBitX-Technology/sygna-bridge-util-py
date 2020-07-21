@@ -99,7 +99,8 @@ class CryptoTest(unittest.TestCase):
         assert mock_sign_data.call_args == call(fake_data, FAKE_PRIVATE_KEY)
         assert result == fake_result
 
-        fake_data['transaction']['originator_vasp']['addrs'][0]['addr_extra_info'] = {'DT': '002'}
+        fake_data['transaction']['originator_vasp']['addrs'][0]['addr_extra_info'] = [{'DT': '001'}]
+        print(f'fake_data = {fake_data}')
         fake_result = copy.deepcopy(fake_data)
         fake_result['signature'] = '4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a'
         mock_sign_data.return_value = fake_result
@@ -136,7 +137,7 @@ class CryptoTest(unittest.TestCase):
     @patch.object(main, 'validate_private_key')
     def test_sign_callback(self, mock_validate_private_key, mock_sign_data):
         fake_data = {
-            'callback_url': 'https://api.sygna.io/api/v1.1.0/bridge/'
+            'callback_url': 'https://api.sygna.io/v2/bridge/'
         }
 
         mock_validate_private_key.side_effect = Exception('validate_private_key raise exception')
@@ -272,7 +273,7 @@ class CryptoTest(unittest.TestCase):
                                            mock_validate_private_key,
                                            mock_sign_data):
         fake_data = {
-            'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/',
+            'callback_permission_request_url': 'https://api.sygna.io/v2/bridge/',
             'vasp_code': 'VASPUSNY1'
         }
 
@@ -301,7 +302,7 @@ class CryptoTest(unittest.TestCase):
         assert result == fake_result
 
         fake_data = {
-            'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+            'callback_txid_url': 'https://api.sygna.io/v2/bridge/txid',
             'vasp_code': 'VASPUSNY1'
         }
         fake_result = copy.deepcopy(fake_data)
@@ -320,7 +321,7 @@ class CryptoTest(unittest.TestCase):
         assert result == fake_result
 
         fake_data = {
-            'callback_txid_url': 'https://api.sygna.io/api/v1.1.0/bridge/txid',
+            'callback_txid_url': 'https://api.sygna.io/v2/bridge/txid',
             'vasp_code': 'VASPUSNY1',
             'callback_permission_request_url': 'https://api.sygna.io/api/v1.1.0/bridge/permission-request',
         }
