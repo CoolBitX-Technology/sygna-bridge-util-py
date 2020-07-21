@@ -13,7 +13,7 @@ from sygna_bridge_util.config import (
 
 ORIGINATOR_API_KEY = "123456789"
 BENEFICIARY_API_KEY = "0987654321"
-DOMAIN = "https://api.sygna.io/api/v2/bridge/"
+DOMAIN = "https://api.sygna.io/"
 
 
 class ApiTest(unittest.TestCase):
@@ -21,17 +21,17 @@ class ApiTest(unittest.TestCase):
     def test_get_sb(self, mock_requests):
         """should use correct args to call get_sb"""
         instance = API(ORIGINATOR_API_KEY, DOMAIN)
-        url = DOMAIN + 'api/v2/bridge/vasp'
+        url = DOMAIN + 'v2/bridge/vasp'
         instance.get_sb(url)
         assert mock_requests.call_count == 1
         assert mock_requests.call_args == call(
-            url, headers={'api_key': ORIGINATOR_API_KEY}, timeout=HTTP_TIMEOUT)
+            url, headers={'x-api-key': ORIGINATOR_API_KEY}, timeout=HTTP_TIMEOUT)
 
     @patch('requests.post')
     def test_post_sb(self, mock_requests):
         """should use correct args to call post_sb"""
         instance = API(ORIGINATOR_API_KEY, DOMAIN)
-        url = DOMAIN + 'api/v2/bridge/transaction/permission'
+        url = DOMAIN + 'v2/bridge/transaction/permission'
         body = {
             'transfer_id': 'ad468f326ebcc2242c32aa6bf7084c44135a068d939e52c08b6d2e86eb9ef725',
             'permission_status': 'ACCEPTED',
@@ -43,7 +43,7 @@ class ApiTest(unittest.TestCase):
             url,
             data=json.dumps(body),
             headers={'Content-Type': 'application/json',
-                     'api_key': ORIGINATOR_API_KEY},
+                     'x-api-key': ORIGINATOR_API_KEY},
             timeout=HTTP_TIMEOUT)
 
     @patch.object(API, 'get_sb')
@@ -57,7 +57,7 @@ class ApiTest(unittest.TestCase):
             instance.get_vasp_list()
         assert 'Request VASPs failed: {0}'.format('test exception') == str(exception.value)
         assert mock_get_sb.call_count == 1
-        assert mock_get_sb.call_args == call(DOMAIN + 'api/v2/bridge/vasp')
+        assert mock_get_sb.call_args == call(DOMAIN + 'v2/bridge/vasp')
         assert mock_verify.call_count == 0
 
         fake_vasp_list = {
@@ -78,7 +78,7 @@ class ApiTest(unittest.TestCase):
         try:
             vasp_list = instance.get_vasp_list(False)
             assert mock_get_sb.call_count == 2
-            assert mock_get_sb.call_args == call(DOMAIN + 'api/v2/bridge/vasp')
+            assert mock_get_sb.call_args == call(DOMAIN + 'v2/bridge/vasp')
             assert mock_verify.call_count == 0
             assert vasp_list == fake_vasp_list['vasp_data']
         except ValueError:
@@ -89,7 +89,7 @@ class ApiTest(unittest.TestCase):
             instance.get_vasp_list(True)
         assert 'get VASP info error: invalid signature.' == str(exception.value)
         assert mock_get_sb.call_count == 3
-        assert mock_get_sb.call_args == call(DOMAIN + 'api/v2/bridge/vasp')
+        assert mock_get_sb.call_args == call(DOMAIN + 'v2/bridge/vasp')
         assert mock_verify.call_count == 1
         assert mock_verify.call_args == call(fake_vasp_list, SYGNA_BRIDGE_CENTRAL_PUBKEY_TEST)
 
@@ -97,7 +97,7 @@ class ApiTest(unittest.TestCase):
         try:
             vasp_list = instance.get_vasp_list(True)
             assert mock_get_sb.call_count == 4
-            assert mock_get_sb.call_args == call(DOMAIN + 'api/v2/bridge/vasp')
+            assert mock_get_sb.call_args == call(DOMAIN + 'v2/bridge/vasp')
             assert mock_verify.call_count == 2
             assert mock_verify.call_args == call(fake_vasp_list, SYGNA_BRIDGE_CENTRAL_PUBKEY_TEST)
             assert vasp_list == fake_vasp_list['vasp_data']
@@ -108,7 +108,7 @@ class ApiTest(unittest.TestCase):
         try:
             vasp_list = instance.get_vasp_list(True, False)
             assert mock_get_sb.call_count == 5
-            assert mock_get_sb.call_args == call(DOMAIN + 'api/v2/bridge/vasp')
+            assert mock_get_sb.call_args == call(DOMAIN + 'v2/bridge/vasp')
             assert mock_verify.call_count == 3
             assert mock_verify.call_args == call(fake_vasp_list, SYGNA_BRIDGE_CENTRAL_PUBKEY_TEST)
             assert vasp_list == fake_vasp_list['vasp_data']
@@ -119,7 +119,7 @@ class ApiTest(unittest.TestCase):
         try:
             vasp_list = instance.get_vasp_list(True, True)
             assert mock_get_sb.call_count == 6
-            assert mock_get_sb.call_args == call(DOMAIN + 'api/v2/bridge/vasp')
+            assert mock_get_sb.call_args == call(DOMAIN + 'v2/bridge/vasp')
             assert mock_verify.call_count == 4
             assert mock_verify.call_args == call(fake_vasp_list, SYGNA_BRIDGE_CENTRAL_PUBKEY)
             assert vasp_list == fake_vasp_list['vasp_data']
@@ -188,19 +188,10 @@ class ApiTest(unittest.TestCase):
             pytest.fail('Unexpected ValueError')
 
     @patch.object(API, 'get_sb')
-    @patch.object(main, 'validate_transfer_id')
-    def test_get_status(self, mock_validate_transfer_id, mock_get_sb):
+    def test_get_status(self, mock_get_sb):
         instance = API(ORIGINATOR_API_KEY, DOMAIN)
 
-        mock_validate_transfer_id.side_effect = ValueError('validate_transfer_id raise exception')
         transfer_id = '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b'
-        with pytest.raises(ValueError) as exception:
-            instance.get_status(transfer_id)
-        assert 'validate_transfer_id raise exception' == str(exception.value)
-        assert mock_validate_transfer_id.call_count == 1
-        assert mock_validate_transfer_id.call_args == call(transfer_id)
-
-        mock_validate_transfer_id.side_effect = None
         fake_vasp_status = {
             'transferData': {
                 'transfer_id': '6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
@@ -248,11 +239,9 @@ class ApiTest(unittest.TestCase):
         mock_get_sb.return_value = fake_vasp_status
         vasp_status = instance.get_status(transfer_id)
         assert vasp_status == fake_vasp_status
-        assert mock_validate_transfer_id.call_count == 2
-        assert mock_validate_transfer_id.call_args == call(transfer_id)
         assert mock_get_sb.call_count == 1
         assert mock_get_sb.call_args == call(
-            DOMAIN + 'api/v2/bridge/transaction/status?transfer_id=' + transfer_id)
+            DOMAIN + 'v2/bridge/transaction/status?transfer_id=' + transfer_id)
 
     @patch.object(API, 'post_sb')
     def test_post_permission(self, mock_post_sb):
@@ -272,14 +261,14 @@ class ApiTest(unittest.TestCase):
         response = instance.post_permission(post_permission_data)
         assert response == fake_post_permission_response
         assert mock_post_sb.call_count == 1
-        assert mock_post_sb.call_args == call(DOMAIN + 'api/v2/bridge/transaction/permission',
+        assert mock_post_sb.call_args == call(DOMAIN + 'v2/bridge/transaction/permission',
                                               post_permission_data)
 
         post_permission_data['permission_status'] = 'REJECTED'
         response = instance.post_permission(post_permission_data)
         assert response == fake_post_permission_response
         assert mock_post_sb.call_count == 2
-        assert mock_post_sb.call_args == call(DOMAIN + 'api/v2/bridge/transaction/permission',
+        assert mock_post_sb.call_args == call(DOMAIN + 'v2/bridge/transaction/permission',
                                               post_permission_data)
 
     @patch.object(API, 'post_sb')
@@ -289,7 +278,7 @@ class ApiTest(unittest.TestCase):
         post_permission_request_data = {
             'callback': {
                 'signature': '12345',
-                'callback_url': 'https://api.sygna.io/api/v2/bridge/'
+                'callback_url': 'https://api.sygna.io/v2/bridge/'
             },
             'data': {
                 'data_dt': '2019-07-29T06:29:00.123Z',
@@ -333,7 +322,7 @@ class ApiTest(unittest.TestCase):
         response = instance.post_permission_request(post_permission_request_data)
         assert response == fake_post_permission_request_response
         assert mock_post_sb.call_count == 1
-        assert mock_post_sb.call_args == call(DOMAIN + 'api/v2/bridge/transaction/permission-request',
+        assert mock_post_sb.call_args == call(DOMAIN + 'v2/bridge/transaction/permission-request',
                                               post_permission_request_data)
 
     @patch.object(API, 'post_sb')
@@ -351,7 +340,7 @@ class ApiTest(unittest.TestCase):
         response = instance.post_transaction_id(post_transaction_id_data)
         assert response == fake_post_transaction_id_response
         assert mock_post_sb.call_count == 1
-        assert mock_post_sb.call_args == call(DOMAIN + 'api/v2/bridge/transaction/txid',
+        assert mock_post_sb.call_args == call(DOMAIN + 'v2/bridge/transaction/txid',
                                               post_transaction_id_data)
 
     @patch.object(API, 'post_sb')
@@ -361,7 +350,7 @@ class ApiTest(unittest.TestCase):
         post_beneficiary_endpoint_url_data = {
             'signature': 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1'
                          'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af',
-            'callback_permission_request_url': 'https://api.sygna.io/api/v2/bridge/permission-request',
+            'callback_permission_request_url': 'https://api.sygna.io/v2/bridge/permission-request',
             'vasp_code': 'VASPUSNY1'
         }
         fake_post_beneficiary_endpoint_url_response = {"status": "ok"}
@@ -369,33 +358,86 @@ class ApiTest(unittest.TestCase):
         response = instance.post_beneficiary_endpoint_url(post_beneficiary_endpoint_url_data)
         assert response == fake_post_beneficiary_endpoint_url_response
         assert mock_post_sb.call_count == 1
-        assert mock_post_sb.call_args == call(DOMAIN + 'api/v2/bridge/vasp/beneficiary-endpoint-url',
+        assert mock_post_sb.call_args == call(DOMAIN + 'v2/bridge/vasp/beneficiary-endpoint-url',
                                               post_beneficiary_endpoint_url_data)
 
         post_beneficiary_endpoint_url_data = {
             'signature': 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1'
                          'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af',
-            'callback_permission_request_url': 'https://api.sygna.io/api/v2/bridge/permission-request',
+            'callback_permission_request_url': 'https://api.sygna.io/v2/bridge/permission-request',
             'vasp_code': 'VASPUSNY1',
-            'callback_txid_url': 'https://api.sygna.io/api/v2/bridge/txid',
+            'callback_txid_url': 'https://api.sygna.io/v2/bridge/txid',
         }
         response = instance.post_beneficiary_endpoint_url(post_beneficiary_endpoint_url_data)
         assert response == fake_post_beneficiary_endpoint_url_response
         assert mock_post_sb.call_count == 2
-        assert mock_post_sb.call_args == call(DOMAIN + 'api/v2/bridge/vasp/beneficiary-endpoint-url',
+        assert mock_post_sb.call_args == call(DOMAIN + 'v2/bridge/vasp/beneficiary-endpoint-url',
                                               post_beneficiary_endpoint_url_data)
 
         post_beneficiary_endpoint_url_data = {
             'signature': 'f947d28d3aba504acd87d65be80f054497f1ebf919a2955343bde0390262c04352f1'
                          'ce8d06fdb7ba7ba43817a9cca623cbd1cb5758bf877a18d28b2c9b05b9af',
             'vasp_code': 'VASPUSNY1',
-            'callback_txid_url': 'https://api.sygna.io/api/v2/bridge/txid',
+            'callback_txid_url': 'https://api.sygna.io/v2/bridge/txid',
         }
         response = instance.post_beneficiary_endpoint_url(post_beneficiary_endpoint_url_data)
         assert response == fake_post_beneficiary_endpoint_url_response
         assert mock_post_sb.call_count == 3
-        assert mock_post_sb.call_args == call(DOMAIN + 'api/v2/bridge/vasp/beneficiary-endpoint-url',
+        assert mock_post_sb.call_args == call(DOMAIN + 'v2/bridge/vasp/beneficiary-endpoint-url',
                                               post_beneficiary_endpoint_url_data)
+
+    @patch.object(API, 'post_sb')
+    def test_post_retry(self, mock_post_sb):
+        instance = API(ORIGINATOR_API_KEY, DOMAIN)
+
+        post_retry_data = {
+            'vasp_code': 'VASPUSNY1'
+        }
+        fake_post_retry_response = {"retryItems": 1}
+        mock_post_sb.return_value = fake_post_retry_response
+        response = instance.post_retry(post_retry_data)
+        assert response == fake_post_retry_response
+        assert mock_post_sb.call_count == 1
+        assert mock_post_sb.call_args == call(DOMAIN + 'v2/bridge/transaction/retry',
+                                              post_retry_data)
+
+    @patch.object(API, 'get_sb')
+    def test_get_currencies(self, mock_get_sb):
+        instance = API(ORIGINATOR_API_KEY, DOMAIN)
+
+        currency_id = 'sygna:0x80000090'
+        currency_name = 'XRP'
+        currency_symbol = 'XRP'
+
+        fake_get_currencies_response = {
+            "supported_coins": [
+                {
+                    "currency_id": "sygna:0x80000090",
+                    "currency_name": "XRP",
+                    "currency_symbol": "XRP",
+                    "is_active": True,
+                    "addr_extra_info": [
+                        "tag"
+                    ]
+                }
+            ]
+        }
+
+        mock_get_sb.return_value = fake_get_currencies_response
+        response = instance.get_currencies()
+        assert response == fake_get_currencies_response
+        assert mock_get_sb.call_count == 1
+        assert mock_get_sb.call_args == call(DOMAIN + 'v2/bridge/transaction/currencies')
+
+        instance.get_currencies({'currency_id': currency_id})
+        assert mock_get_sb.call_count == 2
+        assert mock_get_sb.call_args == call(DOMAIN + f'v2/bridge/transaction/currencies?currency_id={currency_id}')
+
+        instance.get_currencies({'currency_symbol': currency_symbol, 'currency_name': currency_name})
+        assert mock_get_sb.call_count == 3
+        assert mock_get_sb.call_args == call(DOMAIN + f'v2/bridge/transaction/currencies?'
+                                                      f'currency_symbol={currency_symbol}'
+                                                      f'&currency_name={currency_name}')
 
 
 if __name__ == '__main__':
