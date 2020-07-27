@@ -1,3 +1,4 @@
+# 
 # Python Sygna Bridge Util
 
 This is a Python library to help you build servers/servies within Sygna Bridge Ecosystem. For more detail information, please see [Sygna Bridge](https://www.sygna.io/).
@@ -28,11 +29,11 @@ sensitive_data = {
     }
 }
 
-private_info = sygna_bridge_util.crypto.sygna_encrypt_private_data(
+private_info = sygna_bridge_util.crypto.encrypt_private_data(
     sensitive_data, 
     recipient_public_key
 )
-decoded_priv_info = sygna_bridge_util.crypto.sygna_decrypt_private_data(
+decoded_priv_info = sygna_bridge_util.crypto.decrypt_private_data(
     private_info, 
     recipient_privte_key
 )
@@ -47,12 +48,30 @@ The following example is the snippet of originator's signing process of `premiss
 
 ```python
 transaction = {
-    "originator_vasp_code":"10000",
-    "originator_addrs":["3KvJ1uHPShhEAWyqsBEzhfXyeh1TXKAd7D"],
-    "beneficiary_vasp_code":"10001",
-    "beneficiary_addrs":["3F4ReDwiMLu8LrAiXwwD2DhH8U9xMrUzUf"],
-    "transaction_currency":"0x80000000",
-    "amount": 0.973
+    "originator_vasp": {
+        "vasp_code": "VASPUSNY1",
+        "addrs": [
+          {
+            "address": "r3kmLJN5D28dHuH8vZNUZpMC43pEHpaocV",
+            "addr_extra_info": []
+          }
+        ]
+      },
+    "beneficiary_vasp": {
+        "vasp_code": "VASPUSNY2",
+        "addrs": [
+          {
+            "address": "rAPERVgXZavGgiGv6xBgtiZurirW2yAmY",
+            "addr_extra_info": [
+              {
+                "tag": "abc"
+              }
+            ]
+          }
+        ]
+      },
+    "currency_id": "sygna:0x80000090",
+    "amount": "4.51120135938784"
 }
 
 data_dt = "2019-07-29T06:28:00Z"
@@ -91,7 +110,7 @@ API calls to communicate with Sygna Bridge server.
 We use **baisc auth** with all the API calls. To simplify the process, we provide a API class to deal with authentication and post/ get request format.
 
 ```python=
-sb_server = "https://apis.sygna.io/sb/"
+sb_server = "https://api.sygna.io/"
 sb_api_instance = sygna_bridge_util.API("api-key", sb_server)
 ```
 
@@ -133,12 +152,30 @@ private_info = sygna_bridge_util.crypto.sygna_encrypt_private_data(
 )
 
 transaction = {
-    "originator_vasp_code":"10000",
-    "originator_addrs": ["3KvJ1uHPShhEAWyqsBEzhfXyeh1TXKAd7D"],
-    "beneficiary_vasp_code":"10298",
-    "beneficiary_addrs": ["3CHgkx946yyueucCMiJhyH2Vg5kBBvfSGH"],
-    "transaction_currency":"0x80000000",
-    "amount": 0.973
+    "originator_vasp": {
+        "vasp_code": "VASPUSNY1",
+        "addrs": [
+          {
+            "address": "r3kmLJN5D28dHuH8vZNUZpMC43pEHpaocV",
+            "addr_extra_info": []
+          }
+        ]
+      },
+    "beneficiary_vasp": {
+        "vasp_code": "VASPUSNY2",
+        "addrs": [
+          {
+            "address": "rAPERVgXZavGgiGv6xBgtiZurirW2yAmY",
+            "addr_extra_info": [
+              {
+                "tag": "abc"
+              }
+            ]
+          }
+        ]
+      },
+    "currency_id": "sygna:0x80000090",
+    "amount": "4.51120135938784"
 }
 data_dt = "2019-07-29T07:29:80Z"
 
@@ -153,7 +190,7 @@ transfer_data = sygna_bridge_util.crypto.sign_permission_request(
     sender_privKey
 )
 
-callback_url = "https://81f7d956.ngrok.io/api/v1/originator/transaction/premission"
+callback_url = "https://81f7d956.ngrok.io/v2/originator/transaction/premission"
 callback_data = sygna_bridge_util.crypto.sign_callback(
     {
         "callback_url":callback_url

@@ -2,23 +2,16 @@ from . import ecies, sign as sygna_sign
 import json
 from typing import Union
 from sygna_bridge_util.validator import (
-    validate_permission_schema,
-    validate_permission_request_schema,
-    validate_transaction_id_schema,
-    validate_callback_schema,
-    validate_private_key,
-    validate_beneficiary_endpoint_url_schema
-)
-from sygna_bridge_util.utils import (
-    sort_permission_request_data,
-    sort_permission_data,
-    sort_callback_data,
-    sort_transaction_id_data,
-    sort_beneficiary_endpoint_url_data
+    validate_private_key
 )
 
 
 def sygna_encrypt_private_data(data: Union[dict, str], public_key: str) -> str:
+    """ the method would be deprecated next version, use encrypt_private_data instead """
+    return encrypt_private_data(data, public_key)
+
+
+def encrypt_private_data(data: Union[dict, str], public_key: str) -> str:
     """ Encrypt private info data to hex string.
     Args:
         data: dict or str. private info in data format
@@ -34,7 +27,12 @@ def sygna_encrypt_private_data(data: Union[dict, str], public_key: str) -> str:
 
 
 def sygna_decrypt_private_data(private_message: str, private_key: str) -> Union[dict, str]:
-    """ Decode private info from recipient server."""
+    """ the method would be deprecated next version, use decrypt_private_data instead """
+    return decrypt_private_data(private_message, private_key)
+
+
+def decrypt_private_data(private_message: str, private_key: str) -> Union[dict, str]:
+    """ Decrypt private info from recipient server."""
     decode_str = ecies.ecies_decrypt(private_message, private_key)
     try:
         return json.loads(decode_str)
@@ -63,19 +61,28 @@ def sign_permission_request(data: dict, private_key: str) -> dict:
 
     Args:
         data :dict{
-            private_info: str
+            private_info: str,
             transaction: dict{
-                originator_vasp_code: str
-                originator_addrs: str[]
-                Optional originator_addrs_extra: dict
-                beneficiary_vasp_code: str
-                beneficiary_addrs: str[]
-                Optional beneficiary_addrs_extra: dict
-                transaction_currency: str
-                amount: number
+                originator_vasp: dict{
+                    vasp_code: str
+                    addrs:dict[]{
+                        address: str
+                        Optional addr_extra_info: dict[]
+                    }
+                },
+                beneficiary_vasp: dict{
+                    vasp_code: str
+                    addrs:dict[]{
+                        address: str
+                        Optional addr_extra_info: dict[]
+                    }
+                }
+                currency_id: str
+                amount: str
             }
             data_dt: str
             Optional expire_date: int
+            Optional need_validate_addr: bool
         }
         private_key: str
 
@@ -83,28 +90,31 @@ def sign_permission_request(data: dict, private_key: str) -> dict:
         dict{
             private_info: str
             transaction: dict{
-                originator_vasp_code: str
-                originator_addrs: str[]
-                Optional originator_addrs_extra: dict
-                beneficiary_vasp_code: str
-                beneficiary_addrs: str[]
-                Optional beneficiary_addrs_extra: dict
-                transaction_currency: str
-                amount: number
+                originator_vasp: dict{
+                    vasp_code: str
+                    addrs:dict[]{
+                        address: str
+                        Optional addr_extra_info: dict[]
+                    }
+                },
+                beneficiary_vasp: dict{
+                    vasp_code: str
+                    addrs:dict[]{
+                        address: str
+                        Optional addr_extra_info: dict[]
+                    }
+                }
+                currency_id: str
+                amount: str
             }
             data_dt: str
             Optional expire_date: int
+            Optional need_validate_addr: bool
             signature: str
         }
-
-    Raises:
-        ValidationError
     """
-    validate_permission_request_schema(data)
     validate_private_key(private_key)
-
-    sorted_permission_request_data = sort_permission_request_data(data)
-    return sign_data(sorted_permission_request_data, private_key)
+    return sign_data(data, private_key)
 
 
 def sign_callback(data: dict, private_key: str) -> dict:
@@ -121,15 +131,9 @@ def sign_callback(data: dict, private_key: str) -> dict:
             callback_url: str,
             signature: str
         }
-
-    Raises:
-        ValidationError
     """
-    validate_callback_schema(data)
     validate_private_key(private_key)
-
-    sorted_callback_data = sort_callback_data(data)
-    return sign_data(sorted_callback_data, private_key)
+    return sign_data(data, private_key)
 
 
 def sign_permission(data: dict, private_key: str) -> dict:
@@ -140,7 +144,7 @@ def sign_permission(data: dict, private_key: str) -> dict:
             transfer_id: str,
             permission_status: str (ACCEPTED or REJECTED),
             Optional expire_date: int,
-            Optional reject_code: str (BVRC001,BVRC002,BVRC003,BVRC004 or BVRC999),
+            Optional reject_code: str (BVRC001~007 or BVRC999),
             Optional reject_message: str
         }
         private_key: str
@@ -154,15 +158,9 @@ def sign_permission(data: dict, private_key: str) -> dict:
             Optional reject_message: str,
             signature: str
         }
-
-    Raises:
-        ValidationError
     """
-    validate_permission_schema(data)
     validate_private_key(private_key)
-
-    sorted_permission_data = sort_permission_data(data)
-    return sign_data(sorted_permission_data, private_key)
+    return sign_data(data, private_key)
 
 
 def sign_transaction_id(data: dict, private_key: str) -> dict:
@@ -181,16 +179,9 @@ def sign_transaction_id(data: dict, private_key: str) -> dict:
             txid: str,
             signature: str
         }
-
-    Raises:
-        ValidationError
     """
-
-    validate_transaction_id_schema(data)
     validate_private_key(private_key)
-
-    sorted_transaction_id_data = sort_transaction_id_data(data)
-    return sign_data(sorted_transaction_id_data, private_key)
+    return sign_data(data, private_key)
 
 
 def sign_beneficiary_endpoint_url(data: dict, private_key: str) -> dict:
@@ -201,6 +192,7 @@ def sign_beneficiary_endpoint_url(data: dict, private_key: str) -> dict:
             vasp_code: str
             Option callback_permission_request_url: str
             Option callback_txid_url: str
+            Option callback_validate_ddr_url: str
         }
         private_key: str
 
@@ -211,13 +203,6 @@ def sign_beneficiary_endpoint_url(data: dict, private_key: str) -> dict:
             Option callback_txid_url: str
             signature: str
         }
-
-    Raises:
-        ValidationError
     """
-
-    validate_beneficiary_endpoint_url_schema(data)
     validate_private_key(private_key)
-
-    sorted_beneficiary_endpoint_url_data = sort_beneficiary_endpoint_url_data(data)
-    return sign_data(sorted_beneficiary_endpoint_url_data, private_key)
+    return sign_data(data, private_key)

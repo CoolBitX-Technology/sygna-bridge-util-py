@@ -1,6 +1,8 @@
 from .main import (
     sygna_encrypt_private_data,
     sygna_decrypt_private_data,
+    encrypt_private_data,
+    decrypt_private_data,
     sign_data,
     sign_permission_request,
     sign_callback,
@@ -14,7 +16,9 @@ from .verify import verify_data, verify_message
 
 __all__ = [
     'sygna_encrypt_private_data',
+    'encrypt_private_data',
     'sygna_decrypt_private_data',
+    'decrypt_private_data',
     'sign_data',
     'sign_permission_request',
     'sign_callback',
