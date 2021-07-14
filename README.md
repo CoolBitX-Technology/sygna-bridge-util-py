@@ -184,36 +184,11 @@ private_info = sygna_bridge_util.crypto.sygna_encrypt_private_data(
     recipient_public_key
 )
 
-transaction = {
-    "originator_vasp": {
-        "vasp_code": "VASPUSNY1",
-        "addrs": [
-          {
-            "address": "r3kmLJN5D28dHuH8vZNUZpMC43pEHpaocV",
-            "addr_extra_info": []
-          }
-        ]
-      },
-    "beneficiary_vasp": {
-        "vasp_code": "VASPUSNY2",
-        "addrs": [
-          {
-            "address": "rAPERVgXZavGgiGv6xBgtiZurirW2yAmY",
-            "addr_extra_info": [
-              {
-                "tag": "abc"
-              }
-            ]
-          }
-        ]
-      },
-    "currency_id": "sygna:0x80000090",
-    "amount": "4.51120135938784"
-}
 data_dt = "2019-07-29T07:29:80Z"
 
 data_to_sign = {
     "private_info":private_info,
+    # from example above
     "transaction":transaction,
     "data_dt":data_dt
 }
@@ -269,5 +244,6 @@ permission_data = sygna_bridge_util.crypto.sign_permission(
     beneficiary_private_key
 )
 final_result = sb_api_instance.post_permission(permission_data)
-
 ```
+
+For more complete example, please refer to [Example](example/main.py) file.
