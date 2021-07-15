@@ -77,8 +77,52 @@ def get_currencies():
 
 
 def post_permission_request():
-    private_info = encrypt_private_data({'originator': {'name': 'Antoine Griezmann', 'date_of_birth': '1991-03-21'},
-                                         'beneficiary': {'name': 'Leo Messi'}}, BENEFICIARY_PUBLIC_KEY)
+    private_info = encrypt_private_data({
+        "originator": {
+            "originator_persons": [
+                {
+                    "natural_person": {
+                        "name": {
+                            "name_identifiers": [
+                                {
+                                    "primary_identifier": "Wu Xinli",
+                                    "name_identifier_type": "LEGL"
+                                }
+                            ]
+                        },
+                        "national_identification": {
+                            "national_identifier": "446005",
+                            "national_identifier_type": "RAID",
+                            "registration_authority": "RA000553"
+                        },
+                        "country_of_residence": "TZ"
+                    }
+                }
+            ],
+            "account_numbers": [
+                "r3kmLJN5D28dHuH8vZNUZpMC43pEHpaocV"
+            ]
+        },
+        "beneficiary": {
+            "beneficiary_persons": [
+                {
+                    "legal_person": {
+                        "name": {
+                            "name_identifiers": [
+                                {
+                                    "legal_person_name": "ABC Limited",
+                                    "legal_person_name_identifier_type": "LEGL"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ],
+            "account_numbers": [
+                "rAPERVgXZavGgiGv6xBgtiZurirW2yAmY"
+            ]
+        }
+    }, BENEFICIARY_PUBLIC_KEY)
     permission_request_data = {
         'private_info': private_info,
         "transaction": {
