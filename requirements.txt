@@ -14,7 +14,7 @@ eth-utils==1.9.0
 idna==2.10
 pycparser==2.20
 pycryptodome==3.9.8
-requests==2.24.0
+requests==2.31.0
 six==1.15.0
 toolz==0.10.0
 urllib3==1.25.9
