@@ -23,7 +23,7 @@ class API:
             dict
         """
         headers = {'x-api-key': self.api_key,
-                   'User-Agent': 'util-python/2.0.2'}
+                   'User-Agent': 'util-python/2.0.3'}
         response = requests.get(url, headers=headers, timeout=HTTP_TIMEOUT)
         return response.json()
 
@@ -39,7 +39,7 @@ class API:
         """
         headers = {'Content-Type': 'application/json',
                    'x-api-key': self.api_key,
-                   'User-Agent': 'util-python/2.0.2'}
+                   'User-Agent': 'util-python/2.0.3'}
         response = requests.post(
             url,
             data=json.dumps(body),
