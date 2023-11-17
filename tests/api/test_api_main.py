@@ -25,7 +25,7 @@ class ApiTest(unittest.TestCase):
         instance.get_sb(url)
         assert mock_requests.call_count == 1
         assert mock_requests.call_args == call(
-            url, headers={'x-api-key': ORIGINATOR_API_KEY,'User-Agent': 'util-python/2.0.2'}, timeout=HTTP_TIMEOUT)
+            url, headers={'x-api-key': ORIGINATOR_API_KEY,'User-Agent': 'util-python/2.0.3'}, timeout=HTTP_TIMEOUT)
 
     @patch('requests.post')
     def test_post_sb(self, mock_requests):
@@ -44,7 +44,7 @@ class ApiTest(unittest.TestCase):
             data=json.dumps(body),
             headers={'Content-Type': 'application/json',
                      'x-api-key': ORIGINATOR_API_KEY,
-                     'User-Agent': 'util-python/2.0.2'},
+                     'User-Agent': 'util-python/2.0.3'},
             timeout=HTTP_TIMEOUT)
 
     @patch.object(API, 'get_sb')
