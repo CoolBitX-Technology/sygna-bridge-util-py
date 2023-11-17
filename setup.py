@@ -1,6 +1,7 @@
-from setuptools import setup, find_packages
 import io
 import os
+
+from setuptools import find_packages, setup
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -34,5 +35,5 @@ setup(
     long_description=read("README.md"),
     long_description_content_type='text/markdown',
     keywords="sygna-bridge-util sygna bridge sygna-bridge ecosystem",
-    python_requires='>=3.7',
+    python_requires='>=3.11',
 )
